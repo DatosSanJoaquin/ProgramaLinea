@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/ProgramaLinea/static/css/main.0fc12767.css",
+    "main.js": "/ProgramaLinea/static/js/main.33b06a5e.js",
+    "index.html": "/ProgramaLinea/index.html",
+    "main.0fc12767.css.map": "/ProgramaLinea/static/css/main.0fc12767.css.map",
+    "main.33b06a5e.js.map": "/ProgramaLinea/static/js/main.33b06a5e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0fc12767.css",
+    "static/js/main.33b06a5e.js"
+  ]
+}
