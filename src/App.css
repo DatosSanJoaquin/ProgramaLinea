@@ -110,3 +110,27 @@ hr {
   outline: none !important;
   box-shadow: none !important;
 }
+
+.progress-summary {
+  display: flex;
+  justify-content: space-around;
+  background-color: #fff; /* Un color de fondo aproximado, ajusta según la imagen */
+  padding: 10px;
+  color: white;
+}
+
+.progress-item {
+  text-align: center;
+  margin-bottom: 13px;
+}
+
+.progress-value {
+  font-size: 2.5em; /* Ajusta el tamaño de la fuente según sea necesario */
+  font-weight: bold;
+  color: #81ba27;
+}
+
+.progress-label {
+  font-size: 1em;
+  color: black;
+}

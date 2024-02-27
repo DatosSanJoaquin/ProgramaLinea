@@ -260,20 +260,55 @@ function Areas() {
   return (
     <Container fluid style={{ backgroundColor: "#fff" }}>
       <Row
+        style={{
+          backgroundColor: "#3d2e66",
+          color: "#fff",
+          textTransform: "uppercase",
+          padding: "10px 0px 10px 0px",
+          textAlign: "center",
+        }}
+      >
+        <h4>Resumen Global de Avance</h4>
+      </Row>
+      <Row className="progress-summary">
+        <Col md={3} className="progress-item">
+          <div className="progress-value">96</div>
+          <div className="progress-label">
+            COMPROMISOS <span style={{ fontWeight: "700" }}>ASUMIDOS</span>
+          </div>
+        </Col>
+        <Col md={3} className="progress-item">
+          <div className="progress-value">82</div>
+          <div className="progress-label">
+            COMPROMISOS{" "}
+            <span style={{ fontWeight: "700" }}>EN AVANCE MAYOR AL 50%</span>
+          </div>
+        </Col>
+        <Col md={3} className="progress-item">
+          <div className="progress-value">74%</div>
+          <div className="progress-label">
+            {" "}
+            <span style={{ fontWeight: "700" }}>
+              AVANCE PROMEDIO DE CUMPLIMIENTO
+            </span>
+          </div>
+        </Col>
+      </Row>
+      <Row
         style={{ marginTop: "20px", display: "flex", justifyContent: "center" }}
       >
         {areas.map((area, i) => {
           return (
             <Col
-              md={"auto"}
+              md={3}
               key={i}
               style={{
                 marginLeft: "20px",
                 marginRight: "20px",
                 marginTop: "15px",
                 marginBottom: "25px",
-                minWidth: "350px",
-                maxWidth: "350px",
+                minWidth: "300px",
+                //maxWidth: "350px",
                 //backgroundColor: "red",
               }}
             >
@@ -301,7 +336,7 @@ function Areas() {
                     justifyContent: "center",
                   }}
                 >
-                  <div style={{ width: 150, height: 150, padding: "0px" }}>
+                  <div style={{ width: 100, height: 100, padding: "0px" }}>
                     <CircularProgressbarWithChildren
                       value={area.porcentaje}
                       style={{ width: 500 }}
@@ -337,7 +372,11 @@ function Areas() {
                       {/* Put any JSX content in here that you'd like. It'll be vertically and horizonally centered. */}
 
                       <img
-                        style={{ width: 60, margin: "10px" }}
+                        style={{
+                          width: 40,
+                          margin: "10px",
+                          paddingBottom: "2px",
+                        }}
                         src={area.src}
                         alt="imagen"
                       />
