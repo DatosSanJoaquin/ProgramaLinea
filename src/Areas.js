@@ -25,22 +25,22 @@ function Areas() {
     {
       nombre: "Cuidado y Protección Animal",
       porcentaje: 25,
-      src: "/img/01.png",
+      src: process.env.PUBLIC_URL + "/img/01.png",
     },
     {
       nombre: "Vivienda",
       porcentaje: 50,
-      src: "/img/02.png",
+      src: process.env.PUBLIC_URL + "/img/02.png",
     },
     {
       nombre: "Seguridad Comunitaria",
       porcentaje: 32,
-      src: "/img/03.png",
+      src: process.env.PUBLIC_URL + "/img/03.png",
     },
     {
       nombre: "Transparencia y modernización municipal",
       porcentaje: 64,
-      src: "/img/05.png",
+      src: process.env.PUBLIC_URL + "/img/05.png",
     },
   ];
 
