@@ -14,17 +14,17 @@ body {
 }
 
 .agrupacion {
-  background-color: #623e90 !important;
+  /* background-color: #623e90 !important; */
   height: 32px;
-  color: #fff !important;
+  /* color: #fff !important; */
   font-size: 1.8rem;
   font-weight: 700;
 }
 
 .iniciativas {
-  background-color: #623e90 !important;
+  /* background-color: #623e90 !important; */
   height: 32px;
-  color: #fff !important;
+  /* color: #fff !important; */
   font-size: 0.9rem;
   font-weight: 700;
   text-transform: uppercase;

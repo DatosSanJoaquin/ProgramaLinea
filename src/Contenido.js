@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
-
+import { useLocation, useParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -14,9 +14,13 @@ import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 import ModalHitos from "./ModalHitos";
 
 function Contenido() {
+  const { NombreArea } = useParams();
+  const location = useLocation();
+  const [iniciativas, setIniciativas] = useState([]);
+
   const columns = [
     {
-      dataField: "id",
+      dataField: "Id",
       text: "Product ID",
       hidden: true,
     },
@@ -33,13 +37,14 @@ function Contenido() {
       formatter: (cell, row) => {
         return (
           <Row>
-            <Col md={4}>
+            <Col md={7}>
               <div
                 style={{
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
-                  alignItems: "center",
+                  alignItems: "start",
+                  paddingLeft: "3px",
                 }}
               >
                 <div
@@ -50,18 +55,33 @@ function Contenido() {
                     alignItems: "center",
                   }}
                 >
-                  <div
-                    style={{
-                      width: "10px",
-                      height: "10px",
-                      backgroundColor: "#5d428b",
-                      borderRadius: "50%",
-                      marginRight: "10px",
-                    }}
-                  ></div>
-                  <div>{row.Areas}</div>
+                  <div>
+                    {" "}
+                    <h5
+                      style={{
+                        color: "inherit",
+                        fontFamily: "'Work Sans',sans-serif",
+                        fontWeight: "500",
+                        lineHeight: "1.2",
+                      }}
+                    >
+                      {row.NombreIniciativa}
+                    </h5>
+                    <p
+                      style={{
+                        color: "#263238",
+                        fontFamily: "'Work Sans',sans-serif",
+                        //marginBottom: "6px",
+                        fontSize: "13px",
+                        textAlign: "justify",
+                        fontWeight: "400",
+                      }}
+                    >
+                      {row.Descripcion}
+                    </p>
+                  </div>
                 </div>
-                <div
+                {/* <div
                   style={{
                     display: "flex",
                     flexDirection: "row",
@@ -70,23 +90,23 @@ function Contenido() {
                   }}
                 >
                   <div
-                    style={{
-                      width: "10px",
-                      height: "10px",
-                      backgroundColor: "#5d428b",
-                      borderRadius: "50%",
-                      marginRight: "10px",
-                    }}
+                    style={
+                      {
+                        // width: "10px",
+                        // height: "10px",
+                        // //backgroundColor: "#5d428b",
+                        // borderRadius: "50%",
+                        // marginRight: "10px",
+                      }
+                    }
                   ></div>
-                  <span className="iniciativas">
-                    {row.Iniciativas.length} Iniciativas
-                  </span>
-                </div>
+                  <span className="iniciativas">Hitos</span>
+                </div> */}
               </div>
             </Col>
-            <Col md={6} style={{ paddingTop: "15px", paddingBottom: "15px" }}>
+            <Col md={3} style={{ paddingTop: "15px", paddingBottom: "15px" }}>
               <div style={{ paddingTop: "10px" }}>
-                <ProgressBar variant="warning" now={row.barra} />
+                <ProgressBar variant="warning" now={row.AvanceN} />
               </div>
             </Col>
             <Col
@@ -98,7 +118,7 @@ function Contenido() {
                 paddingRight: "0px",
               }}
             >
-              {row.Avance}
+              {row.Avance}{" "}
             </Col>
           </Row>
         );
@@ -223,56 +243,80 @@ function Contenido() {
   const [area, setArea] = useState("");
 
   useEffect(() => {
-    Papa.parse("/Presupuestos.csv", {
-      download: true,
-      header: true, // asumiendo que tu CSV tiene encabezados de columna
-      complete: function (results) {
-        console.log("Finished:", results.data);
-        console.log(JSON.stringify(results.data, null, 2)); // Convertir a JSON y formatear
-
-        Construir(results.data);
-      },
-    });
-
-    PorcentajeTotal();
+    FiltrarInformacion();
   }, []);
 
+  const FiltrarInformacion = () => {
+    const datos = location.state; // Accedes a los datos aquí
+    // console.log("asdasdsd", datos); // { clave: 'valor' }
+
+    let listaAreas = datos.ListaAreas || [];
+
+    //let nombreArea = datos.NombreArea;
+    console.log("location", datos);
+    let nombreArea = "Fomento productivo y emprendimiento" || NombreArea;
+    setArea(nombreArea);
+    console.log("nombreArea", nombreArea);
+
+    //filter contenis data
+    const objArea =
+      listaAreas.find((item) => item.Area.includes(nombreArea)) || {};
+    console.log("objArea", objArea);
+
+    if (Object.keys(objArea).length > 0) {
+      let avance = objArea.Avance?.replace("%", "") || 0;
+      console.log("avance", Number(avance));
+
+      PorcentajeTotal(Number(avance));
+    }
+
+    if (datos.ListaIniciativas.length > 0) {
+      let listaIniciativas = datos.ListaIniciativas || [];
+
+      let filterIniciativas =
+        listaIniciativas.find((item) => item.Area.includes(nombreArea)) || {};
+
+      console.log("listIniciativas", filterIniciativas);
+
+      if (Object.keys(filterIniciativas).length > 0) {
+        let iniciativas = filterIniciativas.Iniciativas || [];
+
+        console.log("iniciativas sin formato", iniciativas);
+
+        let informacionIniciativas_ = [];
+
+        iniciativas.map((item, i) => {
+          let obj = {
+            Id: i + 1,
+            NombreIniciativa: item.NombreIniciativa,
+            Descripcion: item.Descripcion,
+            Avance: item.Avance,
+            AvanceN: Number(item.Avance.replace("%", "")),
+          };
+
+          informacionIniciativas_.push(obj);
+        });
+
+        console.log("Render Iniciativas", informacionIniciativas_);
+        setIniciativas(informacionIniciativas_);
+      }
+    }
+  };
+
+  const PorcentajeTotal = (avance) => {
+    const interval = setInterval(() => {
+      setProgress((prevProgress) =>
+        prevProgress >= avance ? avance : prevProgress + 1
+      );
+    }, 50); // Ajusta el tiempo según necesites
+
+    return () => clearInterval(interval);
+  };
+
   const Construir = (data) => {
-    console.log("Construir");
     console.log(data);
 
     const resultado = {};
-
-    data.forEach((item) => {
-      // Si el área no está definida o está vacía, se ignora el elemento
-      if (!item.Area || item.Area === "") return;
-
-      // Si el área no existe en el resultado, se inicializa
-      if (!resultado[item.Area]) {
-        resultado[item.Area] = {};
-      }
-
-      // Si la iniciativa no existe en el área, se inicializa
-      if (!resultado[item.Area][item.Iniciativa]) {
-        resultado[item.Area][item.Iniciativa] = [];
-      }
-
-      // Se añade el hito a la iniciativa correspondiente
-      resultado[item.Area][item.Iniciativa].push(item.Hito);
-    });
-
-    console.log("aaray", Object.values(resultado));
-
-    let array = Object.values(resultado);
-
-    const nombres = array.map((objeto) => {
-      // 'Object.keys(objeto)[0]' obtendrá la clave del primer par clave-valor del objeto,
-      // que parece ser lo que está marcado en rojo en la consola
-      let nombreArea = Object.keys(objeto)[0];
-
-      console.log("nombreArea", nombreArea);
-      console.log("objeto", objeto);
-    });
 
     //console.log(nombres);
 
@@ -280,20 +324,10 @@ function Contenido() {
     //console.log(resultado);
   };
 
-  const PorcentajeTotal = () => {
-    const interval = setInterval(() => {
-      setProgress((prevProgress) =>
-        prevProgress >= 55 ? 55 : prevProgress + 1
-      );
-    }, 50); // Ajusta el tiempo según necesites
-
-    return () => clearInterval(interval);
-  };
-
   const expandRow = {
     renderer: (row) => (
       <>
-        {row.Iniciativas.map((iniciativa) => {
+        {row.Iniciativas.map((iniciativa, i) => {
           return (
             <Row
               style={{
@@ -303,6 +337,7 @@ function Contenido() {
                 border: "1px solid #E0E0E0",
                 margin: "0px",
               }}
+              key={i}
             >
               <Col md={10}>
                 <h5
@@ -414,6 +449,24 @@ function Contenido() {
     <Container fluid style={{ backgroundColor: "#fff" }}>
       <Row style={{ marginTop: "20px" }}>
         <Col
+          md={12}
+          style={{
+            marginBottom: "20px",
+            textAlign: "center",
+          }}
+        >
+          <span
+            style={{
+              textTransform: "uppercase",
+              fontSize: "15px",
+              fontWeight: "600",
+              letterSpacing: "1px",
+            }}
+          >
+            {area}
+          </span>
+        </Col>
+        <Col
           style={{
             display: "flex",
             flexDirection: "column",
@@ -432,6 +485,7 @@ function Contenido() {
                 backgroundColor: "#3e98c7",
                 textSize: "30px",
                 textWeight: "bold",
+                strokeLinecap: "butt",
                 // Ajusta el grosor de la barra aquí
                 text: {
                   fontWeight: "bold", // Usa 'bold', 'normal', '600', '700', etc.
@@ -443,7 +497,7 @@ function Contenido() {
             />
           </div>
           <div style={{ marginTop: "10px" }}>
-            <span style={{ fontSize: "14px" }}>CUMPLIMIENTO TOTAL</span>
+            <span style={{ fontSize: "14px", fontWeight: "700" }}>AVANCE</span>
           </div>
         </Col>
       </Row>
@@ -458,16 +512,16 @@ function Contenido() {
           marginRight: "0px",
         }}
       >
-        <Col md={4}>AREAS</Col>
+        <Col md={4}>INICIATIVAS</Col>
         <Col md={6}></Col>
-        <Col md={2}>PORCENTAJE</Col>
+        <Col md={2}>% DE AVANCE</Col>
       </Row>
       <Row style={{ marginTop: "7px" }}>
         <BootstrapTable
-          keyField="id"
-          data={data}
+          keyField="Id"
+          data={iniciativas}
           columns={columns}
-          expandRow={expandRow}
+          //expandRow={expandRow}
           bordered={false}
           headerClasses="custom-table-header"
         />

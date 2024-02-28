@@ -21,6 +21,92 @@ import { Button } from "react-bootstrap";
 import { NavLink, useParams, useHistory } from "react-router-dom";
 
 function Areas() {
+  const [listaAreas, setListaAreas] = useState([]);
+  const [listaIniciativas, setListaIniciativas] = useState([]);
+  const [listaHitos, setListaHitos] = useState([]);
+
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/ProgramaEnLinea.csv")
+      .then((response) => response.text())
+      .then((csv) => {
+        Papa.parse(csv, {
+          header: true,
+          complete: (result) => {
+            createArrays(result.data);
+          },
+          skipEmptyLines: true,
+        });
+      });
+  }, []);
+
+  const createArrays = (data) => {
+    let areasMap = new Map();
+    let initiativesMap = new Map();
+    let milestonesMap = new Map();
+
+    data.forEach((row) => {
+      const area = row["Área"];
+      const initiativeName = row["Nombre Iniciativa"];
+
+      // Solo agrega el área si aún no está en el mapa
+      if (!areasMap.has(area)) {
+        areasMap.set(area, { Area: area, Avance: row["% de avance general"] });
+      }
+
+      // Iniciativas y su información relacionada
+      if (!initiativesMap.has(area)) {
+        initiativesMap.set(area, {
+          Area: area,
+          Iniciativas: [
+            {
+              NombreIniciativa: initiativeName,
+              Descripcion: row["Descripción Iniciativa"],
+              Avance: row["% de avance Iniciativa"],
+            },
+          ],
+        });
+      } else {
+        // Solo agrega la iniciativa si aún no existe en este área
+        let initiatives = initiativesMap.get(area).Iniciativas;
+        if (
+          !initiatives.some((init) => init.NombreIniciativa === initiativeName)
+        ) {
+          initiatives.push({
+            NombreIniciativa: initiativeName,
+            Descripcion: row["Descripción Iniciativa"],
+            Avance: row["% de avance Iniciativa"],
+          });
+        }
+      }
+
+      // Hitos relacionados a cada iniciativa
+      if (!milestonesMap.has(initiativeName)) {
+        milestonesMap.set(initiativeName, {
+          NombreIniciativa: initiativeName,
+          Hitos: [],
+        });
+      }
+      milestonesMap.get(initiativeName).Hitos.push({
+        Hito: row["Hitos"],
+        Asignado: row["% asignado"],
+        Avance: row["% de avance hitos"],
+      });
+    });
+
+    // Convertir los Map a Array para el estado de React
+    const areasArray = Array.from(areasMap.values());
+    const initiativesArray = Array.from(initiativesMap.values());
+    const milestonesArray = Array.from(milestonesMap.values());
+
+    console.log("areasArray", areasArray);
+    console.log("initiativesArray", initiativesArray);
+    console.log("milestonesArray", milestonesArray);
+
+    setListaAreas(areasArray);
+    setListaIniciativas(initiativesArray);
+    setListaHitos(milestonesArray);
+  };
+
   const areas = [
     {
       nombre: "Cuidado y Protección Animal",
@@ -404,7 +490,17 @@ function Areas() {
                   <p style={{ fontSize: "13px", marginBottom: "7px" }}>
                     de avance
                   </p>
-                  <NavLink to={`/Contenido/${area.nombre}`}>
+                  <NavLink
+                    to={{
+                      pathname: `/Contenido/${area.nombre}`,
+                      state: {
+                        NombreArea: area.nombre,
+                        ListaAreas: listaAreas,
+                        ListaIniciativas: listaIniciativas,
+                        ListaHitos: listaHitos,
+                      },
+                    }}
+                  >
                     <Button
                       style={{
                         width: "100px",
