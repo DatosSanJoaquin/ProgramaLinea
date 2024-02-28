@@ -24,14 +24,15 @@ body {
 .iniciativas {
   /* background-color: #623e90 !important; */
   height: 32px;
-  /* color: #fff !important; */
+  color: #f07f0d !important;
   font-size: 0.9rem;
   font-weight: 700;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
 .headerTabla {
-  background-color: #623e90 !important;
+  background-color: #f07f0d !important;
   color: #fff !important;
   font-weight: 600;
   font-size: 0.9rem;
@@ -133,4 +134,12 @@ hr {
 .progress-label {
   font-size: 1em;
   color: black;
+}
+
+.progress-bar {
+  background-color: #81ba27 !important;
+}
+.modal-header {
+  border-top-left-radius: 4px !important;
+  border-top-right-radius: 4px !important;
 }

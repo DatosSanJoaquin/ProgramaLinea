@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Papa from "papaparse";
 
 import Container from "react-bootstrap/Container";
@@ -19,8 +19,10 @@ import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 import ModalHitos from "./ModalHitos";
 import { Button } from "react-bootstrap";
 import { NavLink, useParams, useHistory } from "react-router-dom";
+import { AppContext } from "./provider/provider";
 
 function Areas() {
+  const [state, setState] = useContext(AppContext);
   const [listaAreas, setListaAreas] = useState([]);
   const [listaIniciativas, setListaIniciativas] = useState([]);
   const [listaHitos, setListaHitos] = useState([]);
@@ -33,85 +35,87 @@ function Areas() {
   const [areas, setAreas] = useState([]);
 
   useEffect(() => {
-    fetch(process.env.PUBLIC_URL + "/ProgramaEnLinea.csv")
-      .then((response) => response.text())
-      .then((csv) => {
-        Papa.parse(csv, {
-          header: true,
-          complete: (result) => {
-            createArrays(result.data);
-          },
-          skipEmptyLines: true,
-        });
-      });
+    // fetch(process.env.PUBLIC_URL + "/ProgramaEnLinea.csv")
+    //   .then((response) => response.text())
+    //   .then((csv) => {
+    //     Papa.parse(csv, {
+    //       header: true,
+    //       complete: (result) => {
+    //         createArrays(result.data);
+    //       },
+    //       skipEmptyLines: true,
+    //     });
+    //   });
+
+    createArrays();
   }, []);
 
   const createArrays = (data) => {
-    let areasMap = new Map();
-    let initiativesMap = new Map();
-    let milestonesMap = new Map();
+    // let areasMap = new Map();
+    // let initiativesMap = new Map();
+    // let milestonesMap = new Map();
 
-    data.forEach((row) => {
-      const area = row["Área"];
-      const initiativeName = row["Nombre Iniciativa"];
+    // data.forEach((row) => {
+    //   const area = row["Área"];
+    //   const initiativeName = row["Nombre Iniciativa"];
 
-      // Solo agrega el área si aún no está en el mapa
-      if (!areasMap.has(area)) {
-        areasMap.set(area, { Area: area, Avance: row["% de avance general"] });
-      }
+    //   // Solo agrega el área si aún no está en el mapa
+    //   if (!areasMap.has(area)) {
+    //     areasMap.set(area, { Area: area, Avance: row["% de avance general"] });
+    //   }
 
-      // Iniciativas y su información relacionada
-      if (!initiativesMap.has(area)) {
-        initiativesMap.set(area, {
-          Area: area,
-          Iniciativas: [
-            {
-              NombreIniciativa: initiativeName,
-              Descripcion: row["Descripción Iniciativa"],
-              Avance: row["% de avance Iniciativa"],
-            },
-          ],
-        });
-      } else {
-        // Solo agrega la iniciativa si aún no existe en este área
-        let initiatives = initiativesMap.get(area).Iniciativas;
-        if (
-          !initiatives.some((init) => init.NombreIniciativa === initiativeName)
-        ) {
-          initiatives.push({
-            NombreIniciativa: initiativeName,
-            Descripcion: row["Descripción Iniciativa"],
-            Avance: row["% de avance Iniciativa"],
-          });
-        }
-      }
+    //   // Iniciativas y su información relacionada
+    //   if (!initiativesMap.has(area)) {
+    //     initiativesMap.set(area, {
+    //       Area: area,
+    //       Iniciativas: [
+    //         {
+    //           NombreIniciativa: initiativeName,
+    //           Descripcion: row["Descripción Iniciativa"],
+    //           Avance: row["% de avance Iniciativa"],
+    //         },
+    //       ],
+    //     });
+    //   } else {
+    //     // Solo agrega la iniciativa si aún no existe en este área
+    //     let initiatives = initiativesMap.get(area).Iniciativas;
+    //     if (
+    //       !initiatives.some((init) => init.NombreIniciativa === initiativeName)
+    //     ) {
+    //       initiatives.push({
+    //         NombreIniciativa: initiativeName,
+    //         Descripcion: row["Descripción Iniciativa"],
+    //         Avance: row["% de avance Iniciativa"],
+    //       });
+    //     }
+    //   }
 
-      // Hitos relacionados a cada iniciativa
-      if (!milestonesMap.has(initiativeName)) {
-        milestonesMap.set(initiativeName, {
-          NombreIniciativa: initiativeName,
-          Hitos: [],
-        });
-      }
-      milestonesMap.get(initiativeName).Hitos.push({
-        Hito: row["Hitos"],
-        Asignado: row["% asignado"],
-        Avance: row["% de avance hitos"],
-      });
-    });
+    //   // Hitos relacionados a cada iniciativa
+    //   if (!milestonesMap.has(initiativeName)) {
+    //     milestonesMap.set(initiativeName, {
+    //       NombreIniciativa: initiativeName,
+    //       Hitos: [],
+    //     });
+    //   }
+    //   milestonesMap.get(initiativeName).Hitos.push({
+    //     Hito: row["Hitos"],
+    //     Asignado: row["% asignado"],
+    //     Avance: row["% de avance hitos"],
+    //   });
+    // });
 
-    // Convertir los Map a Array para el estado de React
-    const areasArray = Array.from(areasMap.values());
-    const initiativesArray = Array.from(initiativesMap.values());
-    const milestonesArray = Array.from(milestonesMap.values());
+    // // Convertir los Map a Array para el estado de React
+    // const areasArray = Array.from(areasMap.values());
+    // const initiativesArray = Array.from(initiativesMap.values());
+    // const milestonesArray = Array.from(milestonesMap.values());
 
-    console.log("areasArray", areasArray);
-    console.log("initiativesArray", initiativesArray);
-    console.log("milestonesArray", milestonesArray);
+    // console.log("areasArray", areasArray);
+    // console.log("initiativesArray", initiativesArray);
+    // console.log("milestonesArray", milestonesArray);
 
-    setListaAreas(areasArray);
-    setListaIniciativas(initiativesArray);
-    setListaHitos(milestonesArray);
+    // setListaAreas(areasArray);
+    // setListaIniciativas(initiativesArray);
+    // setListaHitos(milestonesArray);
 
     const areas = [
       {
@@ -140,7 +144,9 @@ function Areas() {
     //recorrer areas y asignar el porcentaje de avance
 
     areas.forEach((area) => {
-      let registro = areasArray.find((init) => init.Area.includes(area.nombre));
+      let registro = state.Areas.find((init) =>
+        init.Area.includes(area.nombre)
+      );
       console.log("Area actual", area);
       console.log("registro", registro);
 

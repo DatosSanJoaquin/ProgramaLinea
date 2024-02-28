@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Row,
   Col,
@@ -19,16 +19,38 @@ import {
 } from "react-circular-progressbar";
 
 function ModalHitos(props) {
+  const [datosTablaHitos, setDatosTablaHitos] = useState([]);
+
   let columnsHitos = [
     {
       dataField: "Nombre",
-      text: "Descripción",
+      text: "Hito",
       sort: true,
       headerStyle: { width: "50%" },
       headerClasses: "headerTablaHitos",
       classes: "cellColumnsTablaHitos",
       footer: "",
       footerClasses: "footerTablaHitos",
+      formatter: (cell, row) => (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              fontSize: "14px",
+              fontFamily: "Roboto,Work Sans, sans-serif",
+            }}
+          >
+            {row.Nombre}
+          </div>
+        </div>
+      ),
     },
     {
       dataField: "Asignado",
@@ -40,7 +62,6 @@ function ModalHitos(props) {
       align: "center",
       footerAlign: (column, colIndex) => "center",
       footerClasses: "footerTablaHitos",
-
       footer: "Total",
     },
     {
@@ -124,6 +145,29 @@ function ModalHitos(props) {
     },
   ];
 
+  useEffect(() => {
+    if (
+      props.InformacionModal.Hitos !== undefined &&
+      props.InformacionModal.Hitos.length > 0
+    ) {
+      let datos = [];
+      props.InformacionModal.Hitos.map((item, index) => {
+        let avance = 0;
+        if (item.Avance !== undefined) {
+          avance = item.Avance;
+        }
+        datos.push({
+          Id: index + 1,
+          Nombre: item.Hito,
+          Asignado: item.Asignado,
+          Avance: Number(avance.replace("%", "")),
+        });
+      });
+      console.log("datos tabla hitos", datos);
+      setDatosTablaHitos(datos);
+    }
+  }, []);
+
   return (
     <Modal
       show={props.MostrarModal}
@@ -142,13 +186,26 @@ function ModalHitos(props) {
         closeVariant="white"
       >
         <Modal.Title
-          style={{ color: "#fff", fontSize: "1.1rem", fontWeight: "600" }}
+          style={{
+            color: "#fff",
+            fontSize: "1.1rem",
+            fontWeight: "600",
+            fontFamily: "Work Sans, sans-serif",
+          }}
         >
-          {props.Area}
+          {props.InformacionModal.Area}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <h5>{props.InformacionModal.Nombre}</h5>
+        <h5
+          style={{
+            color: "#263238",
+            fontWeight: "700",
+            fontFamily: "Work Sans, sans-serif",
+          }}
+        >
+          {props.InformacionModal.NombreIniciativa}
+        </h5>
         <Row style={{ marginTop: "20px" }}>
           {/* <Col md={12}>
             <p style={{ textAlign: "justify" }}>
@@ -157,21 +214,18 @@ function ModalHitos(props) {
             </p>
           </Col> */}
           <Col>
-            <p>
-              <strong style={{ color: "#EA5323" }}>Descripción:</strong> Un
-              total de 2260 personas disfrutaron de una rica agenda cultural,
-              participando en una variedad de eventos que incluyeron conciertos,
-              obras de teatro y exposiciones. Este diverso programa logró captar
-              la atención de un amplio público, fomentando el aprecio por las
-              artes y la cultura.
+            <p
+              style={{ fontFamily: "Work Sans, sans-serif", fontSize: "14px" }}
+            >
+              {props.InformacionModal.Descripcion}
             </p>
           </Col>
         </Row>
 
         <Row>
           <BootstrapTable
-            keyField="id"
-            data={data}
+            keyField="Id"
+            data={datosTablaHitos}
             columns={columnsHitos}
             bordered={false}
             //headerClasses="tablaHitos"

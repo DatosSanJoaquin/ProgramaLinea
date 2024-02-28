@@ -1,0 +1,135 @@
+import React, { useEffect, useContext, useState } from "react";
+import Papa from "papaparse";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+  HashRouter,
+} from "react-router-dom";
+import { AppContext } from "./provider/provider";
+import rutas from "./routes";
+function Estructura() {
+  const [state, setState] = useContext(AppContext);
+
+  const _obtenerRutas = (ruta) => {
+    return ruta.map((prop, key) => {
+      return (
+        <Route
+          path={prop.path}
+          render={(props) => <prop.component />}
+          key={key}
+        />
+      );
+    });
+  };
+
+  useEffect(() => {
+    fetch(process.env.PUBLIC_URL + "/ProgramaEnLinea.csv")
+      .then((response) => response.text())
+      .then((csv) => {
+        Papa.parse(csv, {
+          header: true,
+          complete: (result) => {
+            createArrays(result.data);
+          },
+          skipEmptyLines: true,
+        });
+      });
+  }, []);
+
+  const createArrays = (data) => {
+    let mainValues = {};
+
+    let areasMap = new Map();
+    let initiativesMap = new Map();
+    let milestonesMap = new Map();
+
+    data.forEach((row) => {
+      const area = row["Área"];
+      const initiativeName = row["Nombre Iniciativa"];
+
+      // Solo agrega el área si aún no está en el mapa
+      if (!areasMap.has(area)) {
+        areasMap.set(area, { Area: area, Avance: row["% de avance general"] });
+      }
+
+      // Iniciativas y su información relacionada
+      if (!initiativesMap.has(area)) {
+        initiativesMap.set(area, {
+          Area: area,
+          Iniciativas: [
+            {
+              NombreIniciativa: initiativeName,
+              Descripcion: row["Descripción Iniciativa"],
+              Avance: row["% de avance Iniciativa"],
+            },
+          ],
+        });
+      } else {
+        // Solo agrega la iniciativa si aún no existe en este área
+        let initiatives = initiativesMap.get(area).Iniciativas;
+        if (
+          !initiatives.some((init) => init.NombreIniciativa === initiativeName)
+        ) {
+          initiatives.push({
+            NombreIniciativa: initiativeName,
+            Descripcion: row["Descripción Iniciativa"],
+            Avance: row["% de avance Iniciativa"],
+          });
+        }
+      }
+
+      // Hitos relacionados a cada iniciativa
+      if (!milestonesMap.has(initiativeName)) {
+        milestonesMap.set(initiativeName, {
+          NombreIniciativa: initiativeName,
+          Hitos: [],
+        });
+      }
+      milestonesMap.get(initiativeName).Hitos.push({
+        Hito: row["Hitos"],
+        Asignado: row["% asignado hitos"],
+        Avance: row["% de avance hitos"],
+      });
+    });
+
+    // Convertir los Map a Array para el estado de React
+    const areasArray = Array.from(areasMap.values());
+    const initiativesArray = Array.from(initiativesMap.values());
+    const milestonesArray = Array.from(milestonesMap.values());
+
+    console.log("areasArrayApp", areasArray);
+    console.log("initiativesArrayApp", initiativesArray);
+    console.log("milestonesArrayApp", milestonesArray);
+
+    mainValues = {
+      Areas: areasArray,
+      Iniciativas: initiativesArray,
+      Hitos: milestonesArray,
+    };
+    setState(mainValues);
+  };
+
+  return (
+    <>
+      {Object.keys(state).length > 0 ? (
+        <HashRouter>
+          <Switch>
+            {/* Definir más rutas según sea necesario */}
+            {_obtenerRutas(rutas)}
+            <Route exact path="/">
+              <Redirect to="/Areas"></Redirect>
+            </Route>
+
+            {/* Si tienes una ruta de índice o una ruta de captura todo, asegúrate de que la ruta de Areas esté definida antes */}
+          </Switch>
+        </HashRouter>
+      ) : (
+        ""
+      )}
+    </>
+  );
+}
+
+export default Estructura;

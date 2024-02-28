@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useContext, useState } from "react";
+import MyProvider from "./provider/provider";
 import Papa from "papaparse";
 import {
   BrowserRouter as Router,
@@ -16,6 +17,7 @@ import "./App.css";
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 
 import rutas from "./routes";
+import Estructura from "./Estructura";
 
 function App() {
   const _obtenerRutas = (ruta) => {
@@ -31,17 +33,9 @@ function App() {
   };
 
   return (
-    <HashRouter>
-      <Switch>
-        {/* Definir más rutas según sea necesario */}
-        {_obtenerRutas(rutas)}
-        <Route exact path="/">
-          <Redirect to="/Areas"></Redirect>
-        </Route>
-
-        {/* Si tienes una ruta de índice o una ruta de captura todo, asegúrate de que la ruta de Areas esté definida antes */}
-      </Switch>
-    </HashRouter>
+    <MyProvider>
+      <Estructura />
+    </MyProvider>
   );
 }
 

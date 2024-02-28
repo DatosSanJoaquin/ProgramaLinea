@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Papa from "papaparse";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, NavLink } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
@@ -12,8 +13,10 @@ import "./App.css";
 import BootstrapTable from "react-bootstrap-table-next";
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 import ModalHitos from "./ModalHitos";
+import { AppContext } from "./provider/provider";
 
 function Contenido() {
+  const [state, setState] = useContext(AppContext);
   const { NombreArea } = useParams();
   const location = useLocation();
   const [iniciativas, setIniciativas] = useState([]);
@@ -81,32 +84,33 @@ function Contenido() {
                     </p>
                   </div>
                 </div>
-                {/* <div
+                <div
                   style={{
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
                   }}
+                  onClick={() => {
+                    _InformacionModal(row);
+                    //console.log("iniciativa", iniciativa);
+                    //setInformacionModal(iniciativa);
+                  }}
                 >
-                  <div
-                    style={
-                      {
-                        // width: "10px",
-                        // height: "10px",
-                        // //backgroundColor: "#5d428b",
-                        // borderRadius: "50%",
-                        // marginRight: "10px",
-                      }
-                    }
-                  ></div>
-                  <span className="iniciativas">Hitos</span>
-                </div> */}
+                  <span className="iniciativas">Ver Hitos</span>
+                </div>
               </div>
             </Col>
             <Col md={3} style={{ paddingTop: "15px", paddingBottom: "15px" }}>
-              <div style={{ paddingTop: "10px" }}>
-                <ProgressBar variant="warning" now={row.AvanceN} />
+              <div
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                }}
+              >
+                <ProgressBar now={row.AvanceN} />
               </div>
             </Col>
             <Col
@@ -118,7 +122,7 @@ function Contenido() {
                 paddingRight: "0px",
               }}
             >
-              {row.Avance}{" "}
+              <span style={{ color: "#623e90" }}>{row.Avance} </span>
             </Col>
           </Row>
         );
@@ -146,96 +150,6 @@ function Contenido() {
     // },
   ];
 
-  //Consulta
-
-  const data = [
-    {
-      id: 1,
-      Areas: "Cultura",
-      barra: 25,
-      Avance: "25%",
-      Iniciativas: [
-        {
-          id: 1,
-          Nombre: "Actividades Culturales",
-          Porcentaje: "12.5%",
-          Descripcion:
-            "2260 beneficiarios de diversas actividades culturales (conciertos, obras de teatro, exposiciones, entre otras.)",
-          Hitos: [
-            {
-              id: 1,
-              Nombre: "Festival Multicultural",
-            },
-            {
-              id: 2,
-              Nombre: "Programa de Residencias para artistas",
-            },
-          ],
-        },
-        {
-          id: 2,
-          Nombre: "Talleres",
-          Descripcion: "Talleres de formación artística para personas",
-          Porcentaje: "12.5%",
-          Hitos: [
-            {
-              id: 1,
-              Nombre: "Taller de fotografía",
-            },
-            {
-              id: 2,
-              Nombre: "Taller de pintura",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 2,
-      Areas: "Deportes",
-      barra: 30,
-      Avance: "30%",
-      Iniciativas: [
-        {
-          id: 1,
-          Nombre: "Programas de Deporte Comunitario",
-          Porcentaje: "15%",
-          Descripcion:
-            "3200 participantes en diferentes programas deportivos comunitarios (fútbol, baloncesto, voleibol, etc.).",
-          Hitos: [
-            {
-              id: 1,
-              Nombre: "Torneo Interbarrial de Fútbol",
-            },
-            {
-              id: 2,
-              Nombre: "Clínicas de Baloncesto para Jóvenes",
-            },
-          ],
-        },
-        {
-          id: 2,
-          Nombre: "Actividades de Bienestar y Fitness",
-          Descripcion:
-            "Programas de acondicionamiento físico y bienestar para la comunidad",
-          Porcentaje: "15%",
-          Hitos: [
-            {
-              id: 1,
-              Nombre: "Yoga en el Parque",
-            },
-            {
-              id: 2,
-              Nombre: "Caminatas Guiadas",
-            },
-          ],
-        },
-      ],
-    },
-  ];
-
-  const percentage = 66;
-
   const [progress, setProgress] = useState(0);
   const [porcentajeTotal, setPorcentajeTotal] = useState(0);
   const [mostrarModal, setMostrarModal] = useState(false);
@@ -250,11 +164,13 @@ function Contenido() {
     const datos = location.state; // Accedes a los datos aquí
     // console.log("asdasdsd", datos); // { clave: 'valor' }
 
-    let listaAreas = datos ? datos.ListaAreas : [];
+    let listaAreas = state ? state.Areas : [];
 
-    //let nombreArea = datos.NombreArea;
     console.log("location", datos);
     let nombreArea = "Fomento productivo y emprendimiento" || NombreArea;
+    //let nombreArea = datos ? datos.NombreArea : NombreArea;
+
+    //console.log("nombreArea", nombreArea);
     setArea(nombreArea);
     console.log("nombreArea", nombreArea);
 
@@ -270,9 +186,9 @@ function Contenido() {
       PorcentajeTotal(Number(avance));
     }
 
-    if (datos) {
-      if (datos.ListaIniciativas.length > 0) {
-        let listaIniciativas = datos ? datos.ListaIniciativas : [];
+    if (state) {
+      if (state.Iniciativas.length > 0) {
+        let listaIniciativas = state ? state.Iniciativas : [];
 
         let filterIniciativas =
           listaIniciativas.find((item) => item.Area.includes(nombreArea)) || {};
@@ -313,6 +229,40 @@ function Contenido() {
     }, 50); // Ajusta el tiempo según necesites
 
     return () => clearInterval(interval);
+  };
+
+  const _InformacionModal = (data) => {
+    console.log("Informacion modal fila", data);
+
+    let nombreIniciativa = data.NombreIniciativa;
+
+    let listaHitos = state ? state.Hitos : [];
+
+    let filterHitos = listaHitos.filter(
+      (item) => item.NombreIniciativa === nombreIniciativa
+    );
+
+    console.log("filterHitos", filterHitos);
+
+    if (filterHitos.length > 0) {
+      let informacionHitos = filterHitos[0].Hitos || [];
+
+      let informacion = {
+        Area: area,
+        NombreIniciativa: nombreIniciativa,
+        Descripcion: data.Descripcion,
+        Avance: data.Avance,
+        Hitos: informacionHitos,
+      };
+
+      console.log("informacion", informacion);
+      setInformacionModal(informacion);
+      setArea(data.Areas);
+      setMostrarModal(true);
+    }
+
+    //setArea(row.Areas);
+    setMostrarModal(true);
   };
 
   const Construir = (data) => {
@@ -451,9 +401,35 @@ function Contenido() {
     <Container fluid style={{ backgroundColor: "#fff" }}>
       <Row style={{ marginTop: "20px" }}>
         <Col
-          md={12}
+          md={4}
           style={{
-            marginBottom: "20px",
+            display: "flex",
+            justifyContent: "flex-start", // Alinea el botón a la izquierda
+          }}
+        >
+          <NavLink
+            to={{
+              pathname: `/Areas`,
+            }}
+          >
+            <Button
+              style={{
+                width: "130px",
+                borderRadius: "0px",
+                fontSize: "13px",
+              }}
+              className="btnMas"
+              //onClick={handleClick}
+            >
+              Volver atrás
+            </Button>
+          </NavLink>
+        </Col>
+
+        {/* Título Area centrado */}
+        <Col
+          md={4}
+          style={{
             textAlign: "center",
           }}
         >
@@ -468,6 +444,12 @@ function Contenido() {
             {area}
           </span>
         </Col>
+
+        {/* Espacio en blanco para equilibrar el botón Volver atrás */}
+        <Col md={4}></Col>
+
+        {/* ...resto de tu código... */}
+
         <Col
           style={{
             display: "flex",
@@ -532,7 +514,6 @@ function Contenido() {
         <ModalHitos
           MostrarModal={mostrarModal}
           InformacionModal={informacionModal}
-          Area={area}
           CerrarModal={() => {
             setMostrarModal(false);
             setArea("");
