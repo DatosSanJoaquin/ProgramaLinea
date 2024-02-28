@@ -24,6 +24,13 @@ function Areas() {
   const [listaAreas, setListaAreas] = useState([]);
   const [listaIniciativas, setListaIniciativas] = useState([]);
   const [listaHitos, setListaHitos] = useState([]);
+  let history = useHistory();
+  const [progress, setProgress] = useState(0);
+  const [porcentajeTotal, setPorcentajeTotal] = useState(0);
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [informacionModal, setInformacionModal] = useState({});
+  const [area, setArea] = useState("");
+  const [areas, setAreas] = useState([]);
 
   useEffect(() => {
     fetch(process.env.PUBLIC_URL + "/ProgramaEnLinea.csv")
@@ -105,31 +112,47 @@ function Areas() {
     setListaAreas(areasArray);
     setListaIniciativas(initiativesArray);
     setListaHitos(milestonesArray);
-  };
 
-  const areas = [
-    {
-      nombre: "Cuidado y Protección Animal",
-      porcentaje: 25,
-      src: process.env.PUBLIC_URL + "/img/01.png",
-    },
-    {
-      nombre: "Vivienda",
-      porcentaje: 50,
-      src: process.env.PUBLIC_URL + "/img/02.png",
-    },
-    {
-      nombre: "Seguridad Comunitaria",
-      porcentaje: 32,
-      src: process.env.PUBLIC_URL + "/img/03.png",
-    },
-    {
-      nombre: "Fomento Productivo y Emprendimiento",
-      porcentaje: 64,
-      width: "75px",
-      src: process.env.PUBLIC_URL + "/img/FomentoProductivo.png",
-    },
-  ];
+    const areas = [
+      {
+        nombre: "Cuidado y Protección Animal",
+        porcentaje: 25,
+        src: process.env.PUBLIC_URL + "/img/01.png",
+      },
+      {
+        nombre: "Vivienda",
+        porcentaje: 50,
+        src: process.env.PUBLIC_URL + "/img/02.png",
+      },
+      {
+        nombre: "Seguridad Comunitaria",
+        porcentaje: 32,
+        src: process.env.PUBLIC_URL + "/img/03.png",
+      },
+      {
+        nombre: "Fomento productivo y emprendimiento",
+        porcentaje: 0,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/FomentoProductivo.png",
+      },
+    ];
+
+    //recorrer areas y asignar el porcentaje de avance
+
+    areas.forEach((area) => {
+      let registro = areasArray.find((init) => init.Area.includes(area.nombre));
+      console.log("Area actual", area);
+      console.log("registro", registro);
+
+      if (registro) {
+        console.log("area", registro);
+
+        area.porcentaje = Number(registro.Avance.replace("%", ""));
+      }
+    });
+
+    setAreas(areas);
+  };
 
   const columns = [
     {
@@ -332,13 +355,6 @@ function Areas() {
   ];
 
   const percentage = 66;
-
-  let history = useHistory();
-  const [progress, setProgress] = useState(0);
-  const [porcentajeTotal, setPorcentajeTotal] = useState(0);
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [informacionModal, setInformacionModal] = useState({});
-  const [area, setArea] = useState("");
 
   function handleClick() {
     history.push("/Contenido"); // Reemplaza '/otra-ruta' con la ruta de tu otro componente

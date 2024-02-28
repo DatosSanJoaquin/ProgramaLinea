@@ -250,7 +250,7 @@ function Contenido() {
     const datos = location.state; // Accedes a los datos aquí
     // console.log("asdasdsd", datos); // { clave: 'valor' }
 
-    let listaAreas = datos.ListaAreas || [];
+    let listaAreas = datos ? datos.ListaAreas : [];
 
     //let nombreArea = datos.NombreArea;
     console.log("location", datos);
@@ -270,35 +270,37 @@ function Contenido() {
       PorcentajeTotal(Number(avance));
     }
 
-    if (datos.ListaIniciativas.length > 0) {
-      let listaIniciativas = datos.ListaIniciativas || [];
+    if (datos) {
+      if (datos.ListaIniciativas.length > 0) {
+        let listaIniciativas = datos ? datos.ListaIniciativas : [];
 
-      let filterIniciativas =
-        listaIniciativas.find((item) => item.Area.includes(nombreArea)) || {};
+        let filterIniciativas =
+          listaIniciativas.find((item) => item.Area.includes(nombreArea)) || {};
 
-      console.log("listIniciativas", filterIniciativas);
+        console.log("listIniciativas", filterIniciativas);
 
-      if (Object.keys(filterIniciativas).length > 0) {
-        let iniciativas = filterIniciativas.Iniciativas || [];
+        if (Object.keys(filterIniciativas).length > 0) {
+          let iniciativas = filterIniciativas.Iniciativas || [];
 
-        console.log("iniciativas sin formato", iniciativas);
+          console.log("iniciativas sin formato", iniciativas);
 
-        let informacionIniciativas_ = [];
+          let informacionIniciativas_ = [];
 
-        iniciativas.map((item, i) => {
-          let obj = {
-            Id: i + 1,
-            NombreIniciativa: item.NombreIniciativa,
-            Descripcion: item.Descripcion,
-            Avance: item.Avance,
-            AvanceN: Number(item.Avance.replace("%", "")),
-          };
+          iniciativas.map((item, i) => {
+            let obj = {
+              Id: i + 1,
+              NombreIniciativa: item.NombreIniciativa,
+              Descripcion: item.Descripcion,
+              Avance: item.Avance,
+              AvanceN: Number(item.Avance.replace("%", "")),
+            };
 
-          informacionIniciativas_.push(obj);
-        });
+            informacionIniciativas_.push(obj);
+          });
 
-        console.log("Render Iniciativas", informacionIniciativas_);
-        setIniciativas(informacionIniciativas_);
+          console.log("Render Iniciativas", informacionIniciativas_);
+          setIniciativas(informacionIniciativas_);
+        }
       }
     }
   };
@@ -473,7 +475,7 @@ function Contenido() {
             alignItems: "center",
           }}
         >
-          <div style={{ width: 150, height: 150 }}>
+          <div style={{ width: 120, height: 120 }}>
             <CircularProgressbar
               value={progress}
               text={`${progress}%`}
