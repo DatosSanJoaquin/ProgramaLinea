@@ -124,9 +124,10 @@ function Areas() {
       src: process.env.PUBLIC_URL + "/img/03.png",
     },
     {
-      nombre: "Transparencia y modernización municipal",
+      nombre: "Fomento Productivo y Emprendimiento",
       porcentaje: 64,
-      src: process.env.PUBLIC_URL + "/img/05.png",
+      width: "75px",
+      src: process.env.PUBLIC_URL + "/img/FomentoProductivo.png",
     },
   ];
 
@@ -459,7 +460,7 @@ function Areas() {
 
                       <img
                         style={{
-                          width: 40,
+                          width: area.width ? area.width : "40px",
                           margin: "10px",
                           paddingBottom: "2px",
                         }}
