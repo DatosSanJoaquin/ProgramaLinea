@@ -209,6 +209,7 @@ function Contenido() {
               Descripcion: item.Descripcion,
               Avance: item.Avance,
               AvanceN: Number(item.Avance.replace("%", "")),
+              Reporte: item.Reporte ? item.Reporte : "No disponible.",
             };
 
             informacionIniciativas_.push(obj);
@@ -253,6 +254,7 @@ function Contenido() {
         Descripcion: data.Descripcion,
         Avance: data.Avance,
         Hitos: informacionHitos,
+        Reporte: data.Reporte,
       };
 
       console.log("informacion", informacion);

@@ -54,7 +54,7 @@ function ModalHitos(props) {
     },
     {
       dataField: "Asignado",
-      text: " % Asignado",
+      text: "% Asignado",
       sort: true,
       headerStyle: { width: "20%", textAlign: "center" },
       classes: "cellColumnsTablaHitos",
@@ -66,7 +66,7 @@ function ModalHitos(props) {
     },
     {
       dataField: "Avance",
-      text: " % Avance",
+      text: "% de avance acumulado",
       sort: true,
       headerStyle: { width: "20%", textAlign: "center" },
       align: "center",
@@ -230,6 +230,33 @@ function ModalHitos(props) {
             bordered={false}
             //headerClasses="tablaHitos"
           />
+        </Row>
+        <Row style={{ marginLeft: "1px", marginRight: "1px" }}>
+          <Col
+            md={12}
+            style={{
+              borderStyle: "solid",
+              borderRadius: "5px",
+              borderColor: "#81BA27",
+              paddingTop: "8px",
+              paddingBottom: "5px",
+            }}
+          >
+            <h6 style={{ fontWeight: "600", letterSpacing: "0.9px" }}>
+              Resumen
+            </h6>
+            <Col md={12}>
+              <p
+                style={{
+                  textAlign: "justify",
+                  fontFamily: "Work Sans, sans-serif",
+                  fontSize: "14px",
+                }}
+              >
+                {props.InformacionModal.Reporte}
+              </p>
+            </Col>
+          </Col>
         </Row>
         {/* {
           <ul>

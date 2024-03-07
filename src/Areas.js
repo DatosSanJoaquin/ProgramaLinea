@@ -119,19 +119,52 @@ function Areas() {
 
     const areas = [
       {
-        nombre: "Cuidado y Protección Animal",
-        porcentaje: 25,
-        src: process.env.PUBLIC_URL + "/img/01.png",
+        nombre: "Apoyo al Adulto Mayor",
+        porcentaje: 3,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/AdultoMayor.png",
+      },
+      {
+        nombre: " Apoyo a niños, niñas y jóvenes",
+        porcentaje: 2,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/NinosNinasJovenes.png",
+      },
+      {
+        nombre: " Mujer y Equidad de Género",
+        porcentaje: 1,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/MujerEquidadGenero.png",
+      },
+      {
+        nombre: " Salud",
+        porcentaje: 0,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/Salud.png",
+      },
+      {
+        nombre: "  Inclusión y Discapacidad",
+        porcentaje: 0,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/InclusionDiscapacidad.png",
       },
       {
         nombre: "Vivienda",
         porcentaje: 50,
-        src: process.env.PUBLIC_URL + "/img/02.png",
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/Vivienda.png",
       },
       {
-        nombre: "Seguridad Comunitaria",
-        porcentaje: 32,
-        src: process.env.PUBLIC_URL + "/img/03.png",
+        nombre: "Deporte",
+        porcentaje: 50,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/Deporte.png",
+      },
+      {
+        nombre: "Cultura",
+        porcentaje: 50,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/Cultura.png",
       },
       {
         nombre: "Fomento productivo y emprendimiento",
@@ -139,7 +172,52 @@ function Areas() {
         width: "75px",
         src: process.env.PUBLIC_URL + "/img/FomentoProductivo.png",
       },
+      {
+        nombre: "Seguridad comunitaria",
+        porcentaje: 0,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/SeguridadComunitaria.png",
+      },
+      {
+        nombre: "Medio Ambiente y cambio climático",
+        porcentaje: 25,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/MedioAmbiente.png",
+      },
+      {
+        nombre: "Cuidado y Protección Animal",
+        porcentaje: 25,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/CuidadoProteccionAnimal.png",
+      },
+      {
+        nombre: "Socializar la infraestructura y servicios municipales",
+        porcentaje: 25,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/SocializarInfraestructura.png",
+      },
+      {
+        nombre: "Gobernanza colaborativa y participación",
+        porcentaje: 25,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/GobernanzaColaborativa.png",
+      },
+      {
+        nombre: "Ciudad y Espacios públicos",
+        porcentaje: 25,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/CiudadEspaciosPublicos.png",
+      },
+      {
+        nombre: "Transparencia y modernización municipal",
+        porcentaje: 25,
+        width: "75px",
+        src: process.env.PUBLIC_URL + "/img/TransparenciaModernizacion.png",
+      },
     ];
+
+    //Cargar Variable porcentaje total
+    PorcentajeTotal(state.AvanceGeneral);
 
     //recorrer areas y asignar el porcentaje de avance
 
@@ -148,7 +226,6 @@ function Areas() {
         init.Area.includes(area.nombre)
       );
       console.log("Area actual", area);
-      console.log("registro", registro);
 
       if (registro) {
         console.log("area", registro);
@@ -366,6 +443,15 @@ function Areas() {
     history.push("/Contenido"); // Reemplaza '/otra-ruta' con la ruta de tu otro componente
   }
 
+  const PorcentajeTotal = (avance) => {
+    const interval = setInterval(() => {
+      setProgress((prevProgress) =>
+        prevProgress >= avance ? avance : prevProgress + 1
+      );
+    }, 50); // Ajusta el tiempo según necesites
+
+    return () => clearInterval(interval);
+  };
   return (
     <Container fluid style={{ backgroundColor: "#fff" }}>
       <Row
@@ -375,9 +461,51 @@ function Areas() {
           textTransform: "uppercase",
           padding: "10px 0px 10px 0px",
           textAlign: "center",
+          marginBottom: "20px",
         }}
       >
         <h4>Resumen Global de Avance</h4>
+      </Row>
+      <Row style={{ display: "flex", justifyContent: "center" }}>
+        <Col
+          md={3}
+          className="progress-item"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <div style={{ width: 100, height: 110 }}>
+            <CircularProgressbar
+              value={progress}
+              text={`${progress}%`}
+              strokeWidth={12}
+              styles={buildStyles({
+                pathColor: `rgba(93, 66, 139, ${progress / 100})`,
+                textColor: "#81ba27",
+                //trailColor: "#d6d6d6",
+                backgroundColor: "#3e98c7",
+                textSize: "30px",
+                textWeight: "bold",
+                strokeLinecap: "butt",
+                paddingBottom: "20px",
+                // Ajusta el grosor de la barra aquí
+                text: {
+                  fontWeight: "bold", // Usa 'bold', 'normal', '600', '700', etc.
+                },
+                // Transición suave del progreso
+                pathTransition:
+                  progress === 0 ? "none" : "stroke-dashoffset 0.5s ease 0s",
+              })}
+            />
+          </div>
+          <div className="progress-label">
+            <span style={{ fontWeight: "700" }}>
+              AVANCE PROMEDIO DE CUMPLIMIENTO
+            </span>
+          </div>
+        </Col>
       </Row>
       <Row className="progress-summary">
         <Col md={3} className="progress-item">
@@ -386,6 +514,14 @@ function Areas() {
             COMPROMISOS <span style={{ fontWeight: "700" }}>ASUMIDOS</span>
           </div>
         </Col>
+        {/* <Col md={3} className="progress-item">
+          <div className="progress-value">82</div>
+          <div className="progress-label">
+            COMPROMISOS{" "}
+            <span style={{ fontWeight: "700" }}>EN AVANCE MAYOR AL 50%</span>
+          </div>
+        </Col> */}
+
         <Col md={3} className="progress-item">
           <div className="progress-value">82</div>
           <div className="progress-label">
@@ -393,15 +529,18 @@ function Areas() {
             <span style={{ fontWeight: "700" }}>EN AVANCE MAYOR AL 50%</span>
           </div>
         </Col>
-        <Col md={3} className="progress-item">
-          <div className="progress-value">74%</div>
-          <div className="progress-label">
-            {" "}
-            <span style={{ fontWeight: "700" }}>
-              AVANCE PROMEDIO DE CUMPLIMIENTO
-            </span>
-          </div>
-        </Col>
+      </Row>
+      <Row
+        style={{
+          backgroundColor: "#F07F0D",
+          color: "#fff",
+          textTransform: "uppercase",
+          padding: "13px 0px 13px 0px",
+          textAlign: "center",
+          marginBottom: "20px",
+        }}
+      >
+        <h4 style={{ marginBottom: "0px" }}>Avance por Áreas</h4>
       </Row>
       <Row
         style={{ marginTop: "20px", display: "flex", justifyContent: "center" }}
@@ -415,8 +554,8 @@ function Areas() {
                 marginLeft: "20px",
                 marginRight: "20px",
                 marginTop: "15px",
-                marginBottom: "25px",
-                minWidth: "300px",
+                marginBottom: "35px",
+                //minWidth: "300px",
                 //maxWidth: "350px",
                 //backgroundColor: "red",
               }}
@@ -445,7 +584,7 @@ function Areas() {
                     justifyContent: "center",
                   }}
                 >
-                  <div style={{ width: 100, height: 100, padding: "0px" }}>
+                  <div style={{ width: 115, height: 110, padding: "0px" }}>
                     <CircularProgressbarWithChildren
                       value={area.porcentaje}
                       style={{ width: 500 }}
@@ -462,7 +601,7 @@ function Areas() {
                         textSize: "16px",
 
                         // How long animation takes to go from one percentage to another, in seconds
-                        pathTransitionDuration: 0.5,
+                        pathTransitionDuration: 0.6,
 
                         // Can specify path transition in more detail, or remove it entirely
                         // pathTransition: 'none',
@@ -472,10 +611,6 @@ function Areas() {
                         textColor: "#f88",
                         trailColor: "#d6d6d6",
                         backgroundColor: "#5D428B",
-                        pathTransition:
-                          progress === 0
-                            ? "none"
-                            : "stroke-dashoffset 0.5s ease 0s",
                       })}
                     >
                       {/* Put any JSX content in here that you'd like. It'll be vertically and horizonally centered. */}

@@ -44,14 +44,21 @@ function Estructura() {
     let areasMap = new Map();
     let initiativesMap = new Map();
     let milestonesMap = new Map();
-
+    let avanceGeneral;
     data.forEach((row) => {
       const area = row["Área"];
       const initiativeName = row["Nombre Iniciativa"];
 
+      if (!avanceGeneral) {
+        avanceGeneral = row["% de avance general"]
+          ? Number(row["% de avance general"].replace("%", ""))
+          : 0;
+        console.log("avanceGeneral", avanceGeneral);
+      }
+
       // Solo agrega el área si aún no está en el mapa
       if (!areasMap.has(area)) {
-        areasMap.set(area, { Area: area, Avance: row["% de avance general"] });
+        areasMap.set(area, { Area: area, Avance: row["% de avance área"] });
       }
 
       // Iniciativas y su información relacionada
@@ -63,6 +70,7 @@ function Estructura() {
               NombreIniciativa: initiativeName,
               Descripcion: row["Descripción Iniciativa"],
               Avance: row["% de avance Iniciativa"],
+              Reporte: row["Reporte de avance"],
             },
           ],
         });
@@ -76,6 +84,7 @@ function Estructura() {
             NombreIniciativa: initiativeName,
             Descripcion: row["Descripción Iniciativa"],
             Avance: row["% de avance Iniciativa"],
+            Reporte: row["Reporte de avance"],
           });
         }
       }
@@ -99,14 +108,11 @@ function Estructura() {
     const initiativesArray = Array.from(initiativesMap.values());
     const milestonesArray = Array.from(milestonesMap.values());
 
-    console.log("areasArrayApp", areasArray);
-    console.log("initiativesArrayApp", initiativesArray);
-    console.log("milestonesArrayApp", milestonesArray);
-
     mainValues = {
       Areas: areasArray,
       Iniciativas: initiativesArray,
       Hitos: milestonesArray,
+      AvanceGeneral: avanceGeneral,
     };
     setState(mainValues);
   };
