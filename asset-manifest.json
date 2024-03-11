@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/ProgramaLinea/static/css/main.214526aa.css",
+    "main.css": "/ProgramaLinea/static/css/main.e0dbc6b9.css",
     "main.js": "/ProgramaLinea/static/js/main.7ac7b855.js",
     "index.html": "/ProgramaLinea/index.html",
-    "main.214526aa.css.map": "/ProgramaLinea/static/css/main.214526aa.css.map",
+    "main.e0dbc6b9.css.map": "/ProgramaLinea/static/css/main.e0dbc6b9.css.map",
     "main.7ac7b855.js.map": "/ProgramaLinea/static/js/main.7ac7b855.js.map"
   },
   "entrypoints": [
-    "static/css/main.214526aa.css",
+    "static/css/main.e0dbc6b9.css",
     "static/js/main.7ac7b855.js"
   ]
 }
