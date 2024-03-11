@@ -185,7 +185,7 @@ function Areas() {
         src: process.env.PUBLIC_URL + "/img/MedioAmbiente.png",
       },
       {
-        nombre: "Cuidado y Protección Animal",
+        nombre: "Cuidado y protección animal",
         porcentaje: 25,
         width: "75px",
         src: process.env.PUBLIC_URL + "/img/CuidadoProteccionAnimal.png",

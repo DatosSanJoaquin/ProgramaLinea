@@ -174,8 +174,8 @@ function ModalHitos(props) {
       dialogClassName="modal-90w"
       //dialogClassName="anchoModal"
       //onHide={handleClose}
-      backdrop="static"
-      keyboard={false}
+      //backdrop="static"
+      keyboard={true}
       onHide={() => {
         props.CerrarModal();
       }}

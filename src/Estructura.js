@@ -99,7 +99,7 @@ function Estructura() {
       milestonesMap.get(initiativeName).Hitos.push({
         Hito: row["Hitos"],
         Asignado: row["% asignado hitos"],
-        Avance: row["% de avance hitos"],
+        Avance: row["% de avance acumulado"],
       });
     });
 

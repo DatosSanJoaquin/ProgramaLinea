@@ -167,8 +167,8 @@ function Contenido() {
     let listaAreas = state ? state.Areas : [];
 
     console.log("location", datos);
-    let nombreArea = "Fomento productivo y emprendimiento" || NombreArea;
-    //let nombreArea = datos ? datos.NombreArea : NombreArea;
+    //let nombreArea = "Fomento productivo y emprendimiento" || NombreArea;
+    let nombreArea = datos ? datos.NombreArea : NombreArea;
 
     //console.log("nombreArea", nombreArea);
     setArea(nombreArea);
