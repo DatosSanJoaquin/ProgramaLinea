@@ -509,7 +509,7 @@ function Areas() {
       </Row>
       <Row className="progress-summary">
         <Col md={3} className="progress-item">
-          <div className="progress-value">96</div>
+          <div className="progress-value">95</div>
           <div className="progress-label">
             COMPROMISOS <span style={{ fontWeight: "700" }}>ASUMIDOS</span>
           </div>
@@ -523,10 +523,10 @@ function Areas() {
         </Col> */}
 
         <Col md={3} className="progress-item">
-          <div className="progress-value">82</div>
+          <div className="progress-value">73</div>
           <div className="progress-label">
             COMPROMISOS{" "}
-            <span style={{ fontWeight: "700" }}>EN AVANCE MAYOR AL 50%</span>
+            <span style={{ fontWeight: "700" }}>EN AVANCE MAYOR AL 80%</span>
           </div>
         </Col>
       </Row>
