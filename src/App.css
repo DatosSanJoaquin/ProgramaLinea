@@ -38,11 +38,27 @@ body {
   font-size: 0.9rem;
 }
 
+.headerTabla {
+  background-color: #f07f0d !important;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.react-bootstrap-table {
+  /* padding-left: 4px; */
+  /* padding-right: 4px; */
+}
+
+.modal {
+  padding-right: 0px !important;
+}
+
 .headerTablaHitos {
   background-color: #623e90 !important;
   color: #fff !important;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .footerTablaHitos {
@@ -50,6 +66,12 @@ body {
   color: #fff !important;
   font-weight: 600;
   font-size: 0.9rem;
+}
+
+@media only screen and (max-width: 767px) {
+  .headerTablaHitos {
+    font-size: 12px; /* Tamaño de fuente para dispositivos móviles */
+  }
 }
 
 .custom-table-header {
