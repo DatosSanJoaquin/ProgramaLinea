@@ -173,7 +173,7 @@ function Areas() {
         src: process.env.PUBLIC_URL + "/img/FomentoProductivo.png",
       },
       {
-        nombre: "Seguridad comunitaria",
+        nombre: "Seguridad Comunitaria",
         porcentaje: 0,
         width: "75px",
         src: process.env.PUBLIC_URL + "/img/SeguridadComunitaria.png",

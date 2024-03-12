@@ -56,7 +56,7 @@ function ModalHitos(props) {
       dataField: "Asignado",
       text: "% Asignado",
       sort: true,
-      headerStyle: { width: "20%", textAlign: "center" },
+      headerStyle: { width: "22%", textAlign: "center" },
       classes: "cellColumnsTablaHitos",
       headerClasses: "headerTablaHitos",
       align: "center",
@@ -68,9 +68,12 @@ function ModalHitos(props) {
       dataField: "Avance",
       text: "% de avance acumulado",
       sort: true,
-      headerStyle: { width: "20%", textAlign: "center" },
+      //headerStyle: { width: "20%", textAlign: "center" },
+      headerStyle: {
+        textAlign: "center",
+      },
       align: "center",
-      //classes: "cellColumnsTablaHitos",
+      classes: "cellColumnsTablaHitos",
       headerClasses: "headerTablaHitos",
       footerAlign: (column, colIndex) => "center",
       footerClasses: "footerTablaHitos",
@@ -85,17 +88,17 @@ function ModalHitos(props) {
         >
           <div style={{ width: "70px" }}>
             {/* <CircularProgressbar
-            value={row.Avance}
-            text={row.Avance + "%"}
-            background
-            backgroundPadding={6}
-            styles={buildStyles({
-              backgroundColor: "#3e98c7",
-              textColor: "#fff",
-              pathColor: "#fff",
-              trailColor: "transparent",
-            })}
-          /> */}
+          value={row.Avance}
+          text={row.Avance + "%"}
+          background
+          backgroundPadding={6}
+          styles={buildStyles({
+            backgroundColor: "#3e98c7",
+            textColor: "#fff",
+            pathColor: "#fff",
+            trailColor: "transparent",
+          })}
+        /> */}
 
             <CircularProgressbar
               value={row.Avance}
@@ -172,6 +175,9 @@ function ModalHitos(props) {
     <Modal
       show={props.MostrarModal}
       dialogClassName="modal-90w"
+      style={{
+        paddingRight: "0px",
+      }}
       //dialogClassName="anchoModal"
       //onHide={handleClose}
       //backdrop="static"
@@ -228,7 +234,6 @@ function ModalHitos(props) {
             data={datosTablaHitos}
             columns={columnsHitos}
             bordered={false}
-            //headerClasses="tablaHitos"
           />
         </Row>
         <Row style={{ marginLeft: "1px", marginRight: "1px" }}>
