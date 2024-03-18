@@ -78,7 +78,14 @@ function ModalHitos(props) {
       footerAlign: (column, colIndex) => "center",
       footerClasses: "footerTablaHitos",
 
-      footer: "100%",
+      footer: (columnData) => {
+        //console.log("columnData", columnData);
+        //el ultimo valor del arreglo
+
+        if (columnData.length > 0) {
+          return columnData[columnData.length - 1] + "%";
+        }
+      },
       formatter: (cell, row) => (
         <div
           style={{
