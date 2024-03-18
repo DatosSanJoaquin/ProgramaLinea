@@ -125,13 +125,13 @@ function Areas() {
         src: process.env.PUBLIC_URL + "/img/AdultoMayor.png",
       },
       {
-        nombre: " Apoyo a niños, niñas y jóvenes",
+        nombre: "Apoyo a niños, niñas y jóvenes",
         porcentaje: 0,
         width: "75px",
         src: process.env.PUBLIC_URL + "/img/NinosNinasJovenes.png",
       },
       {
-        nombre: " Mujer y Equidad de Género",
+        nombre: "Mujer y Equidad de Género",
         porcentaje: 0,
         width: "75px",
         src: process.env.PUBLIC_URL + "/img/MujerEquidadGenero.png",
@@ -143,7 +143,7 @@ function Areas() {
         src: process.env.PUBLIC_URL + "/img/Salud.png",
       },
       {
-        nombre: "  Inclusión y Discapacidad",
+        nombre: "Inclusión y Discapacidad",
         porcentaje: 0,
         width: "75px",
         src: process.env.PUBLIC_URL + "/img/InclusionDiscapacidad.png",
