@@ -46,7 +46,8 @@ function Areas() {
     //       skipEmptyLines: true,
     //     });
     //   });
-
+    //window.parent.scrollTo(0, 0);
+    window.parent.postMessage("scrollToTop", "*");
     createArrays();
   }, []);
 
