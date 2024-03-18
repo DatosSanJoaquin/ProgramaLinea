@@ -158,6 +158,8 @@ function Contenido() {
 
   useEffect(() => {
     FiltrarInformacion();
+
+    window.parent.scrollTo(0, 0);
   }, []);
 
   const FiltrarInformacion = () => {
