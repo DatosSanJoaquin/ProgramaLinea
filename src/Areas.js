@@ -156,6 +156,8 @@ function Areas() {
 
     //recorrer areas y asignar el porcentaje de avance
 
+    console.log("Areas", state.Areas);
+
     areas.forEach((area) => {
       let registro = state.Areas.find((init) =>
         init.Area.includes(area.nombre)
