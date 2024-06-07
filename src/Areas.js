@@ -460,7 +460,7 @@ function Areas() {
         </Col> */}
 
         <Col md={3} className="progress-item">
-          <div className="progress-value">73</div>
+          <div className="progress-value">77</div>
           <div className="progress-label">
             COMPROMISOS{" "}
             <span style={{ fontWeight: "700" }}>EN AVANCE MAYOR AL 80%</span>
