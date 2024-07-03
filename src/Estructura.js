@@ -32,8 +32,8 @@ function Estructura() {
 
     console.log("csvUrl", csvUrl);
 
-    //fetch(csvUrl)
-    fetch("/Programa%20en%20linea%20web/Programa%20en%20linea.csv")
+    fetch(csvUrl)
+      //fetch("/Programa%20en%20linea%20web/Programa%20en%20linea.csv")
       //fetch(process.env.PUBLIC_URL + "/ProgramaEnLinea.csv")
       .then((response) => response.text())
       .then((csv) => {
