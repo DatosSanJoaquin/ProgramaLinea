@@ -25,11 +25,11 @@ function Estructura() {
   };
 
   useEffect(() => {
-    //fetch("/Programa%20en%20linea%20web/Programa%20en%20linea.csv")
-    fetch(process.env.PUBLIC_URL + "/ProgramaEnLinea.csv")
+    fetch("/Programa%20en%20linea%20web/Programa%20en%20linea.csv")
+      //fetch(process.env.PUBLIC_URL + "/ProgramaEnLinea.csv")
       .then((response) => response.text())
       .then((csv) => {
-        console.log("csv", csv);
+        console.log("file", csv);
         Papa.parse(csv, {
           header: true,
           complete: (result) => {
