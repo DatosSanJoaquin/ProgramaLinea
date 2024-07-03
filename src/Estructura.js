@@ -25,8 +25,16 @@ function Estructura() {
   };
 
   useEffect(() => {
-    //fetch("/Programa%20en%20linea%20web/Programa%20en%20linea.csv")
-    fetch(process.env.PUBLIC_URL + "/ProgramaEnLinea.csv")
+    //const csvUrl = `${process.env.PUBLIC_URL}/Programa%20en%20linea%20web/Programa%20en%20linea.csv`;
+
+    const csvUrl =
+      "https://www.sanjoaquin.cl/Programa%20en%20linea%20web/Programa%20en%20linea.csv";
+
+    console.log("csvUrl", csvUrl);
+
+    //fetch(csvUrl)
+    fetch("/Programa%20en%20linea%20web/Programa%20en%20linea.csv")
+      //fetch(process.env.PUBLIC_URL + "/ProgramaEnLinea.csv")
       .then((response) => response.text())
       .then((csv) => {
         console.log("file", csv);
