@@ -24,15 +24,37 @@ function Estructura() {
     });
   };
 
+  // useEffect(() => {
+  //   //fetch("/Programa%20en%20linea%20web/Programa%20en%20linea.csv")
+  //   fetch(process.env.PUBLIC_URL + "/ProgramaEnLinea.csv")
+  //     // fetch(
+  //     //   "https://www.sanjoaquin.cl/Programa%20en%20linea%20web/Programa%20en%20linea.csv"
+  //     // )
+  //     .then((response) => response.text())
+  //     .then((csv) => {
+  //       console.log("csv", csv);
+  //       Papa.parse(csv, {
+  //         header: true,
+  //         complete: (result) => {
+  //           createArrays(result.data);
+  //         },
+  //         skipEmptyLines: true,
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching the CSV file:", error);
+  //       //alert("Error al leer los datos ", error);
+  //     });
+  // }, []);
+
   useEffect(() => {
-    //fetch("/Programa%20en%20linea%20web/Programa%20en%20linea.csv")
-    fetch(process.env.PUBLIC_URL + "/ProgramaEnLinea.csv")
-      // fetch(
-      //   "https://www.sanjoaquin.cl/Programa%20en%20linea%20web/Programa%20en%20linea.csv"
-      // )
+    // Cambia la URL del fetch para apuntar a la URL del archivo en GitHub
+    fetch(
+      "https://raw.githubusercontent.com/DatosSanJoaquin/Archivos/main/ProgramaEnLinea.csv"
+    )
       .then((response) => response.text())
       .then((csv) => {
-        console.log("csv", csv);
+        console.log("csv desde git", csv);
         Papa.parse(csv, {
           header: true,
           complete: (result) => {
