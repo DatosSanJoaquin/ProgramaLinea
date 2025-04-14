@@ -47,8 +47,19 @@ function Estructura() {
   //     });
   // }, []);
 
+  //https://raw.githubusercontent.com/DatosSanJoaquin/ProgramaLinea/refs/heads/master/public/Periodo2/ProgramaEnLinea.csv
+  //http://raw.githubusercontent.com/DatosSanJoaquin/ProgramaLinea/refs/heads/master/public/Periodo1/ProgramaEnLinea.csv
+
   useEffect(() => {
     // Cambia la URL del fetch para apuntar a la URL del archivo en GitHub
+
+    const urls = {
+      "2021-2024":
+        "http://raw.githubusercontent.com/DatosSanJoaquin/ProgramaLinea/refs/heads/master/public/Periodo1/ProgramaEnLinea.csv",
+      "2024-2028":
+        "https://raw.githubusercontent.com/DatosSanJoaquin/ProgramaLinea/refs/heads/master/public/Periodo2/ProgramaEnLinea.csv",
+    };
+
     fetch(
       "https://raw.githubusercontent.com/DatosSanJoaquin/Archivos/main/ProgramaEnLinea.csv"
     )
