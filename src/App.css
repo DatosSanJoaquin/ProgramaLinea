@@ -1,0 +1,167 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap");
+
+body {
+  font-family: "Space Mono", monospace;
+}
+
+.CircularProgressbar .CircularProgressbar-text {
+  /* font-size: 1rem; */
+  /* dominant-baseline: middle; */
+  /* text-anchor: middle; */
+  /* fill: "#606A7B" !important; */
+
+  font-weight: 600;
+}
+
+.agrupacion {
+  /* background-color: #623e90 !important; */
+  height: 32px;
+  /* color: #fff !important; */
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.iniciativas {
+  /* background-color: #623e90 !important; */
+  height: 32px;
+  color: #f07f0d !important;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.headerTabla {
+  background-color: #f07f0d !important;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.headerTabla {
+  background-color: #f07f0d !important;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.react-bootstrap-table {
+  /* padding-left: 4px; */
+  /* padding-right: 4px; */
+}
+
+.modal {
+  padding-right: 0px !important;
+}
+
+.headerTablaHitos {
+  background-color: #623e90 !important;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.footerTablaHitos {
+  background-color: #eb5e1c !important;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+@media only screen and (max-width: 767px) {
+  .headerTablaHitos {
+    font-size: 12px; /* Tamaño de fuente para dispositivos móviles */
+  }
+}
+
+.custom-table-header {
+  border-bottom: 5px solid #fff; /* Añade un borde sólido al final del encabezado */
+  display: none !important
+  ;
+}
+
+/* .react-bootstrap-table .row-expand-slide-exit-active {
+  transition: opacity 0.8s ease;
+  opacity: 0;
+}
+.react-bootstrap-table .row-expand-slide-appear-active {
+  transition: opacity 0.5s ease;
+  opacity: 1;
+} */
+
+.row-expansion-style {
+  padding: 0px !important;
+}
+
+.row-expand-slide-appear-active {
+  max-height: 1000px;
+  transition: max-height 1s linear !important;
+}
+
+.encabezadoModal {
+  background: linear-gradient(#873f70, #963e66);
+}
+
+.modal-90w {
+  max-width: none !important;
+  width: 90%;
+}
+
+hr {
+  margin-top: 2px;
+
+  border: 2px solid #98346e;
+}
+
+.cellColumnsTablaHitos {
+  vertical-align: middle !important;
+}
+
+.btnMas {
+  background-color: #5d428b !important;
+  border-color: #5d428b !important;
+  color: #fff;
+}
+
+.btnMas:hover {
+  background-color: #3d2e66 !important;
+  border-color: #4c3a7d !important;
+  color: #fff;
+}
+
+.btnMas:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.progress-summary {
+  display: flex;
+  justify-content: space-around;
+  background-color: #fff; /* Un color de fondo aproximado, ajusta según la imagen */
+  padding: 10px;
+  color: white;
+}
+
+.progress-item {
+  text-align: center;
+  margin-bottom: 13px;
+}
+
+.progress-value {
+  font-size: 2.2em; /* Ajusta el tamaño de la fuente según sea necesario */
+  font-weight: bold;
+  color: #81ba27;
+}
+
+.progress-label {
+  font-size: 1em;
+  color: black;
+}
+
+.progress-bar {
+  background-color: #81ba27 !important;
+}
+.modal-header {
+  border-top-left-radius: 4px !important;
+  border-top-right-radius: 4px !important;
+}
