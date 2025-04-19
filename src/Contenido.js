@@ -60,16 +60,7 @@ function Contenido() {
                 >
                   <div>
                     {" "}
-                    <h5
-                      style={{
-                        color: "inherit",
-                        fontFamily: "'Work Sans',sans-serif",
-                        fontWeight: "500",
-                        lineHeight: "1.2",
-                      }}
-                    >
-                      {row.NombreIniciativa}
-                    </h5>
+                    <h5 className="nombreIniciativa">{row.NombreIniciativa}</h5>
                     <p
                       style={{
                         color: "#263238",
@@ -122,7 +113,7 @@ function Contenido() {
                 paddingRight: "0px",
               }}
             >
-              <span style={{ color: "#623e90" }}>{row.Avance} </span>
+              <span className="porcentajeBarra">{row.Avance} </span>
             </Col>
           </Row>
         );
@@ -157,29 +148,36 @@ function Contenido() {
   const [area, setArea] = useState("");
 
   useEffect(() => {
-    FiltrarInformacion();
-    window.parent.postMessage("scrollToTop", "*");
-    //window.parent.scrollTo(0, 0);
-  }, []);
+    if (state?.periodos?.[state.periodoActivo]) {
+      console.log("nombre area", NombreArea);
+      setArea(NombreArea);
+      FiltrarInformacion();
+      window.parent.postMessage("scrollToTop", "*");
+    }
+  }, [state.periodoActivo]);
 
   const FiltrarInformacion = () => {
-    const datos = location.state; // Accedes a los datos aquí
-    // console.log("asdasdsd", datos); // { clave: 'valor' }
+    const datos = state?.periodos?.[state.periodoActivo] || {};
+    const listaAreas = datos.Areas || [];
 
-    let listaAreas = state ? state.Areas : [];
+    console.log("periodo activo", state.periodoActivo);
 
     console.log("location", datos);
     //let nombreArea = "Fomento productivo y emprendimiento" || NombreArea;
-    let nombreArea = datos ? datos.NombreArea : NombreArea;
-
+    //let nombreArea = datos ? datos.NombreArea : NombreArea;
+    const nombreArea = location.state?.NombreArea || NombreArea;
+    const nombreNormalizado = nombreArea.trim().toLowerCase();
     //console.log("nombreArea", nombreArea);
-    setArea(nombreArea);
+    //setArea(nombreArea);
     console.log("nombreArea", nombreArea);
 
     //filter contenis data
-    const objArea =
-      listaAreas.find((item) => item.Area.includes(nombreArea)) || {};
+    const objArea = listaAreas.find((item) =>
+      item.Area.trim().toLowerCase().includes(nombreNormalizado)
+    );
     console.log("objArea", objArea);
+
+    //setArea(objArea.Area);
 
     if (Object.keys(objArea).length > 0) {
       let avance = objArea.Avance?.replace("%", "") || 0;
@@ -189,8 +187,8 @@ function Contenido() {
     }
 
     if (state) {
-      if (state.Iniciativas.length > 0) {
-        let listaIniciativas = state ? state.Iniciativas : [];
+      if (datos.Iniciativas && datos.Iniciativas.length > 0) {
+        let listaIniciativas = datos.Iniciativas;
 
         let filterIniciativas =
           listaIniciativas.find((item) => item.Area.includes(nombreArea)) || {};
@@ -236,10 +234,11 @@ function Contenido() {
 
   const _InformacionModal = (data) => {
     console.log("Informacion modal fila", data);
+    const datos = state?.periodos?.[state.periodoActivo] || {};
 
     let nombreIniciativa = data.NombreIniciativa;
 
-    let listaHitos = state ? state.Hitos : [];
+    let listaHitos = datos.Hitos || [];
 
     let filterHitos = listaHitos.filter(
       (item) => item.NombreIniciativa === nombreIniciativa
@@ -261,7 +260,7 @@ function Contenido() {
 
       console.log("informacion", informacion);
       setInformacionModal(informacion);
-      setArea(data.Areas);
+      //etArea(data.Areas);
       setMostrarModal(true);
     }
 
@@ -327,7 +326,7 @@ function Contenido() {
                     onClick={() => {
                       console.log("iniciativa", iniciativa);
                       setInformacionModal(iniciativa);
-                      setArea(row.Areas);
+                      //setArea(row.Areas);
                       setMostrarModal(true);
                     }}
                   >
@@ -405,7 +404,8 @@ function Contenido() {
     <Container fluid style={{ backgroundColor: "#fff" }}>
       <Row style={{ marginTop: "20px" }}>
         <Col
-          md={4}
+          md={6}
+          xs={6}
           style={{
             display: "flex",
             justifyContent: "flex-start", // Alinea el botón a la izquierda
@@ -430,29 +430,41 @@ function Contenido() {
           </NavLink>
         </Col>
 
+        {/* Espacio en blanco para equilibrar el botón Volver atrás */}
+        <Col
+          md={6}
+          xs={6}
+          style={{
+            display: "flex",
+            justifyContent: "flex-end", // Alinea el botón a la derecha
+            alignItems: "center",
+          }}
+        >
+          <span className="tituloPeriodo">{state.periodoActivo}</span>
+        </Col>
         {/* Título Area centrado */}
         <Col
-          md={4}
+          md={12}
+          //xs={6}
           style={{
             textAlign: "center",
+            marginBottom: "10px",
+            marginTop: "5px",
           }}
         >
           <span
-            style={{
-              textTransform: "uppercase",
-              fontSize: "15px",
-              fontWeight: "600",
-              letterSpacing: "1px",
-            }}
+            className="tituloArea"
+            // style={{
+            //   textTransform: "uppercase",
+            //   fontSize: "15px",
+            //   fontWeight: "600",
+
+            //   letterSpacing: "1px",
+            // }}
           >
             {area}
           </span>
         </Col>
-
-        {/* Espacio en blanco para equilibrar el botón Volver atrás */}
-        <Col md={4}></Col>
-
-        {/* ...resto de tu código... */}
 
         <Col
           style={{
@@ -520,7 +532,7 @@ function Contenido() {
           InformacionModal={informacionModal}
           CerrarModal={() => {
             setMostrarModal(false);
-            setArea("");
+            //setArea("");
             setInformacionModal({});
           }}
         />

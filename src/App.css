@@ -165,3 +165,85 @@ hr {
   border-top-left-radius: 4px !important;
   border-top-right-radius: 4px !important;
 }
+
+/* Estilo para selector */
+.selector-btn {
+  border: 2px solid #4a801f; /* tono más oscuro que #60B62D */
+  background-color: white;
+  color: #9ec463;
+  font-weight: normal;
+  padding: 8px 16px;
+  font-family: monospace;
+  margin: 0 5px;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.selector-btn.activo {
+  background-color: #60b62d;
+  color: white;
+  font-weight: bold;
+  border-color: #4a801f;
+}
+
+.selector-btn:hover {
+  /* background-color: #f2fbee; */
+}
+
+.selector-btn.inactivo {
+  background-color: #f2fbee;
+  color: #98aa8a;
+  font-weight: normal;
+  border-color: #4a801f;
+}
+
+.selector-btn.inactivo:hover {
+  background-color: #f2fbee;
+  color: #4a801f;
+  font-weight: bold;
+  border-color: #4a801f;
+}
+
+.nombreIniciativa {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: inherit;
+  font-family: work sans, sans-serif;
+}
+
+.porcentajeBarra {
+  color: #623e90;
+  font-size: 1.8rem;
+}
+
+.tituloArea {
+  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #e1802f;
+}
+
+.tituloPeriodo {
+  font-size: 15px;
+  font-weight: 600;
+  color: #623e90;
+  letter-spacing: 0.05em;
+  font-family: work sans, sans-serif;
+}
+
+@media only screen and (max-width: 600px) {
+  .nombreIniciativa {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  .porcentajeBarra {
+    font-size: 1.2rem;
+  }
+  .tituloArea {
+    font-size: 14px;
+  }
+  .tituloPeriodo {
+    font-size: 13px;
+  }
+}

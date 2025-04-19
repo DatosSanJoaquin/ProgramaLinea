@@ -212,7 +212,8 @@ function ModalHitos(props) {
       <Modal.Body>
         <h5
           style={{
-            color: "#263238",
+            //color: "#263238",
+            color: "#4d7311",
             fontWeight: "700",
             fontFamily: "Work Sans, sans-serif",
           }}

@@ -1,109 +1,117 @@
 import React, { useEffect, useContext, useState } from "react";
 import Papa from "papaparse";
 import {
-  BrowserRouter as Router,
+  HashRouter,
   Route,
   Switch,
   Redirect,
-  HashRouter,
+  useLocation,
 } from "react-router-dom";
 import { AppContext } from "./provider/provider";
 import rutas from "./routes";
+import SelectorPeriodo from "./SelectorPeriodo";
+import { BounceLoader } from "react-spinners";
+
+const _obtenerRutas = (ruta) => {
+  return ruta.map((prop, key) => {
+    return (
+      <Route
+        path={prop.path}
+        render={(props) => <prop.component />}
+        key={key}
+      />
+    );
+  });
+};
+
+function InnerRouterContent({ periodoActivo, cambiarPeriodo }) {
+  const location = useLocation();
+
+  const ocultarSelector = location.pathname.includes("/Contenido");
+
+  return (
+    <>
+      {!ocultarSelector && (
+        <div style={{ padding: "15px", textAlign: "center" }}>
+          <SelectorPeriodo
+            periodoActivo={periodoActivo}
+            onPeriodoChange={cambiarPeriodo}
+          />
+        </div>
+      )}
+
+      <Switch>
+        {_obtenerRutas(rutas)}
+        <Route exact path="/">
+          <Redirect to="/Areas" />
+        </Route>
+      </Switch>
+    </>
+  );
+}
+
 function Estructura() {
   const [state, setState] = useContext(AppContext);
+  const [loading, setLoading] = useState(true);
 
-  const _obtenerRutas = (ruta) => {
-    return ruta.map((prop, key) => {
-      return (
-        <Route
-          path={prop.path}
-          render={(props) => <prop.component />}
-          key={key}
-        />
-      );
-    });
+  const urls = {
+    "Periodo 2021-2024":
+      "https://raw.githubusercontent.com/DatosSanJoaquin/ProgramaLinea/refs/heads/main/public/Periodo1/ProgramaEnLinea.csv",
+    "Periodo 2025-2028":
+      "https://raw.githubusercontent.com/DatosSanJoaquin/ProgramaLinea/refs/heads/main/public/Periodo2/ProgramaEnLinea.csv",
   };
 
-  // useEffect(() => {
-  //   //fetch("/Programa%20en%20linea%20web/Programa%20en%20linea.csv")
-  //   fetch(process.env.PUBLIC_URL + "/ProgramaEnLinea.csv")
-  //     // fetch(
-  //     //   "https://www.sanjoaquin.cl/Programa%20en%20linea%20web/Programa%20en%20linea.csv"
-  //     // )
-  //     .then((response) => response.text())
-  //     .then((csv) => {
-  //       console.log("csv", csv);
-  //       Papa.parse(csv, {
-  //         header: true,
-  //         complete: (result) => {
-  //           createArrays(result.data);
-  //         },
-  //         skipEmptyLines: true,
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching the CSV file:", error);
-  //       //alert("Error al leer los datos ", error);
-  //     });
-  // }, []);
-
-  //https://raw.githubusercontent.com/DatosSanJoaquin/ProgramaLinea/refs/heads/master/public/Periodo2/ProgramaEnLinea.csv
-  //http://raw.githubusercontent.com/DatosSanJoaquin/ProgramaLinea/refs/heads/master/public/Periodo1/ProgramaEnLinea.csv
-
   useEffect(() => {
-    // Cambia la URL del fetch para apuntar a la URL del archivo en GitHub
+    const fetchDataPorPeriodo = async () => {
+      const resultados = {};
 
-    const urls = {
-      "2021-2024":
-        "http://raw.githubusercontent.com/DatosSanJoaquin/ProgramaLinea/refs/heads/master/public/Periodo1/ProgramaEnLinea.csv",
-      "2024-2028":
-        "https://raw.githubusercontent.com/DatosSanJoaquin/ProgramaLinea/refs/heads/master/public/Periodo2/ProgramaEnLinea.csv",
+      for (const [periodo, url] of Object.entries(urls)) {
+        try {
+          const response = await fetch(url);
+          const csv = await response.text();
+          const result = Papa.parse(csv, {
+            header: true,
+            skipEmptyLines: true,
+          });
+          resultados[periodo] = construirEstructura(result.data);
+        } catch (error) {
+          console.error(`Error cargando datos para ${periodo}`, error);
+        }
+      }
+
+      console.log("resultados", {
+        periodos: resultados,
+        periodoActivo: "Periodo 2025-2028",
+      });
+
+      setState({
+        periodos: resultados,
+        periodoActivo: "Periodo 2025-2028",
+      });
+      setLoading(false);
     };
 
-    fetch(
-      "https://raw.githubusercontent.com/DatosSanJoaquin/Archivos/main/ProgramaEnLinea.csv"
-    )
-      .then((response) => response.text())
-      .then((csv) => {
-        console.log("csv desde git", csv);
-        Papa.parse(csv, {
-          header: true,
-          complete: (result) => {
-            createArrays(result.data);
-          },
-          skipEmptyLines: true,
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching the CSV file:", error);
-        //alert("Error al leer los datos ", error);
-      });
+    fetchDataPorPeriodo();
   }, []);
 
-  const createArrays = (data) => {
-    let mainValues = {};
-
+  const construirEstructura = (data) => {
     let areasMap = new Map();
     let initiativesMap = new Map();
     let milestonesMap = new Map();
     let avanceGeneral;
+
     data.forEach((row) => {
       const area = row["Área"];
       const initiativeName = row["Nombre Iniciativa"];
 
-      if (!avanceGeneral) {
-        avanceGeneral = row["% de avance general"]
-          ? Number(row["% de avance general"].replace("%", ""))
-          : 0;
-        console.log("avanceGeneral", avanceGeneral);
+      if (!avanceGeneral && row["% de avance general"]) {
+        avanceGeneral = Number(row["% de avance general"].replace("%", ""));
       }
 
-      // Solo agrega el área si aún no está en el mapa
       if (!areasMap.has(area)) {
         areasMap.set(area, { Area: area, Avance: row["% de avance área"] });
       }
 
-      // Iniciativas y su información relacionada
       if (!initiativesMap.has(area)) {
         initiativesMap.set(area, {
           Area: area,
@@ -117,7 +125,6 @@ function Estructura() {
           ],
         });
       } else {
-        // Solo agrega la iniciativa si aún no existe en este área
         let initiatives = initiativesMap.get(area).Iniciativas;
         if (
           !initiatives.some((init) => init.NombreIniciativa === initiativeName)
@@ -131,13 +138,13 @@ function Estructura() {
         }
       }
 
-      // Hitos relacionados a cada iniciativa
       if (!milestonesMap.has(initiativeName)) {
         milestonesMap.set(initiativeName, {
           NombreIniciativa: initiativeName,
           Hitos: [],
         });
       }
+
       milestonesMap.get(initiativeName).Hitos.push({
         Hito: row["Hitos"],
         Asignado: row["% asignado hitos"],
@@ -145,36 +152,48 @@ function Estructura() {
       });
     });
 
-    // Convertir los Map a Array para el estado de React
-    const areasArray = Array.from(areasMap.values());
-    const initiativesArray = Array.from(initiativesMap.values());
-    const milestonesArray = Array.from(milestonesMap.values());
-
-    mainValues = {
-      Areas: areasArray,
-      Iniciativas: initiativesArray,
-      Hitos: milestonesArray,
-      AvanceGeneral: avanceGeneral,
+    return {
+      Areas: Array.from(areasMap.values()),
+      Iniciativas: Array.from(initiativesMap.values()),
+      Hitos: Array.from(milestonesMap.values()),
+      AvanceGeneral: avanceGeneral || 0,
     };
-    setState(mainValues);
+  };
+
+  const cambiarPeriodo = (nuevoPeriodo) => {
+    setState((prev) => ({
+      ...prev,
+      periodoActivo: nuevoPeriodo,
+    }));
   };
 
   return (
     <>
-      {Object.keys(state).length > 0 ? (
-        <HashRouter>
-          <Switch>
-            {/* Definir más rutas según sea necesario */}
-            {_obtenerRutas(rutas)}
-            <Route exact path="/">
-              <Redirect to="/Areas"></Redirect>
-            </Route>
-
-            {/* Si tienes una ruta de índice o una ruta de captura todo, asegúrate de que la ruta de Areas esté definida antes */}
-          </Switch>
-        </HashRouter>
+      {loading ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            //height: "100vh",
+            marginTop: "200px",
+          }}
+        >
+          <BounceLoader color="#623D8F" size={80} />
+          <p
+            style={{ marginTop: "20px", fontWeight: "bold", color: "#623D8F" }}
+          >
+            Cargando Información...
+          </p>
+        </div>
       ) : (
-        ""
+        <HashRouter>
+          <InnerRouterContent
+            periodoActivo={state.periodoActivo}
+            cambiarPeriodo={cambiarPeriodo}
+          />
+        </HashRouter>
       )}
     </>
   );

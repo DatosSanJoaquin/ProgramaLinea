@@ -22,16 +22,11 @@ import { NavLink, useParams, useHistory } from "react-router-dom";
 import { AppContext } from "./provider/provider";
 
 function Areas() {
-  const [state] = useContext(AppContext);
-  const datos = state.periodos[state.periodoActivo] || {};
-  const areasData = datos.Areas || [];
-  const iniciativasData = datos.Iniciativas || [];
-  const hitosData = datos.Hitos || [];
-  const avanceGeneral = datos.AvanceGeneral || 0;
-
+  const [state, setState] = useContext(AppContext);
   const [listaAreas, setListaAreas] = useState([]);
   const [listaIniciativas, setListaIniciativas] = useState([]);
   const [listaHitos, setListaHitos] = useState([]);
+  let history = useHistory();
   const [progress, setProgress] = useState(0);
   const [porcentajeTotal, setPorcentajeTotal] = useState(0);
   const [mostrarModal, setMostrarModal] = useState(false);
@@ -39,34 +34,25 @@ function Areas() {
   const [area, setArea] = useState("");
   const [areas, setAreas] = useState([]);
 
-  let history = useHistory();
-
   useEffect(() => {
+    // fetch(process.env.PUBLIC_URL + "/ProgramaEnLinea.csv")
+    //   .then((response) => response.text())
+    //   .then((csv) => {
+    //     Papa.parse(csv, {
+    //       header: true,
+    //       complete: (result) => {
+    //         createArrays(result.data);
+    //       },
+    //       skipEmptyLines: true,
+    //     });
+    //   });
+    //window.parent.scrollTo(0, 0);
     window.parent.postMessage("scrollToTop", "*");
     createArrays();
-    setProgress(0); // Reinicia progreso cada vez que cambia de período
-  }, [state.periodoActivo]); // ⚠️ se recarga al cambiar período
+  }, []);
 
-  useEffect(() => {
-    let interval;
-    if (progress < avanceGeneral) {
-      interval = setInterval(() => {
-        setProgress((prev) => {
-          const next = prev + 1;
-          if (next >= avanceGeneral) {
-            clearInterval(interval);
-            return avanceGeneral;
-          }
-          return next;
-        });
-      }, 20);
-    }
-
-    return () => clearInterval(interval);
-  }, [progress, avanceGeneral]);
-
-  const createArrays = () => {
-    const baseAreas = [
+  const createArrays = (data) => {
+    const areas = [
       {
         nombre: "Apoyo al Adulto Mayor",
         porcentaje: 0,
@@ -165,21 +151,27 @@ function Areas() {
       },
     ];
 
-    baseAreas.forEach((area) => {
-      if (Array.isArray(areasData)) {
-        const registro = areasData.find((init) =>
-          init.Area?.includes(area.nombre)
-        );
-        if (registro) {
-          area.porcentaje = Number(registro.Avance?.replace("%", "") || 0);
-        }
+    //Cargar Variable porcentaje total
+    PorcentajeTotal(state.AvanceGeneral);
+
+    //recorrer areas y asignar el porcentaje de avance
+
+    console.log("Areas", state.Areas);
+
+    areas.forEach((area) => {
+      let registro = state.Areas.find((init) =>
+        init.Area.includes(area.nombre)
+      );
+      console.log("Area actual", area);
+
+      if (registro) {
+        console.log("area", registro);
+
+        area.porcentaje = Number(registro.Avance.replace("%", ""));
       }
     });
-    setAreas(baseAreas);
-    setListaAreas(areasData);
-    setListaIniciativas(iniciativasData);
-    setListaHitos(hitosData);
-    //PorcentajeTotal(avanceGeneral);
+
+    setAreas(areas);
   };
 
   const columns = [
@@ -294,6 +286,94 @@ function Areas() {
     // },
   ];
 
+  //Consulta
+
+  const data = [
+    {
+      id: 1,
+      Areas: "Cultura",
+      barra: 25,
+      Avance: "25%",
+      Iniciativas: [
+        {
+          id: 1,
+          Nombre: "Actividades Culturales",
+          Porcentaje: "12.5%",
+          Descripcion:
+            "2260 beneficiarios de diversas actividades culturales (conciertos, obras de teatro, exposiciones, entre otras.)",
+          Hitos: [
+            {
+              id: 1,
+              Nombre: "Festival Multicultural",
+            },
+            {
+              id: 2,
+              Nombre: "Programa de Residencias para artistas",
+            },
+          ],
+        },
+        {
+          id: 2,
+          Nombre: "Talleres",
+          Descripcion: "Talleres de formación artística para personas",
+          Porcentaje: "12.5%",
+          Hitos: [
+            {
+              id: 1,
+              Nombre: "Taller de fotografía",
+            },
+            {
+              id: 2,
+              Nombre: "Taller de pintura",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 2,
+      Areas: "Deportes",
+      barra: 30,
+      Avance: "30%",
+      Iniciativas: [
+        {
+          id: 1,
+          Nombre: "Programas de Deporte Comunitario",
+          Porcentaje: "15%",
+          Descripcion:
+            "3200 participantes en diferentes programas deportivos comunitarios (fútbol, baloncesto, voleibol, etc.).",
+          Hitos: [
+            {
+              id: 1,
+              Nombre: "Torneo Interbarrial de Fútbol",
+            },
+            {
+              id: 2,
+              Nombre: "Clínicas de Baloncesto para Jóvenes",
+            },
+          ],
+        },
+        {
+          id: 2,
+          Nombre: "Actividades de Bienestar y Fitness",
+          Descripcion:
+            "Programas de acondicionamiento físico y bienestar para la comunidad",
+          Porcentaje: "15%",
+          Hitos: [
+            {
+              id: 1,
+              Nombre: "Yoga en el Parque",
+            },
+            {
+              id: 2,
+              Nombre: "Caminatas Guiadas",
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
   const percentage = 66;
 
   function handleClick() {
@@ -305,7 +385,8 @@ function Areas() {
       setProgress((prevProgress) =>
         prevProgress >= avance ? avance : prevProgress + 1
       );
-    }, 50);
+    }, 50); // Ajusta el tiempo según necesites
+
     return () => clearInterval(interval);
   };
   return (
@@ -365,22 +446,12 @@ function Areas() {
         </Col>
       </Row>
       <Row className="progress-summary">
-        {state.periodoActivo.includes("2024") ? (
-          <Col md={3} className="progress-item">
-            <div className="progress-value">95</div>
-            <div className="progress-label">
-              COMPROMISOS <span style={{ fontWeight: "700" }}>ASUMIDOS</span>
-            </div>
-          </Col>
-        ) : (
-          <Col md={3} className="progress-item">
-            <div className="progress-value">109</div>
-            <div className="progress-label">
-              COMPROMISOS <span style={{ fontWeight: "700" }}>ASUMIDOS</span>
-            </div>
-          </Col>
-        )}
-
+        <Col md={3} className="progress-item">
+          <div className="progress-value">95</div>
+          <div className="progress-label">
+            COMPROMISOS <span style={{ fontWeight: "700" }}>ASUMIDOS</span>
+          </div>
+        </Col>
         {/* <Col md={3} className="progress-item">
           <div className="progress-value">82</div>
           <div className="progress-label">
@@ -389,23 +460,13 @@ function Areas() {
           </div>
         </Col> */}
 
-        {state.periodoActivo.includes("2024") ? (
-          <Col md={3} className="progress-item">
-            <div className="progress-value">84</div>
-            <div className="progress-label">
-              COMPROMISOS{" "}
-              <span style={{ fontWeight: "700" }}>EN AVANCE MAYOR AL 80%</span>
-            </div>
-          </Col>
-        ) : (
-          <Col md={3} className="progress-item">
-            <div className="progress-value">11</div>
-            <div className="progress-label">
-              COMPROMISOS{" "}
-              <span style={{ fontWeight: "700" }}>EN AVANCE MAYOR AL 40%</span>
-            </div>
-          </Col>
-        )}
+        <Col md={3} className="progress-item">
+          <div className="progress-value">77</div>
+          <div className="progress-label">
+            COMPROMISOS{" "}
+            <span style={{ fontWeight: "700" }}>EN AVANCE MAYOR AL 80%</span>
+          </div>
+        </Col>
       </Row>
       <Row
         style={{
